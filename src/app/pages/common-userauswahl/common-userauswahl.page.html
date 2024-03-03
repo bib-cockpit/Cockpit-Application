@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+  <page-header #PageHeader>
+
+  </page-header>
+</ion-header>
+<ion-content>
+
+  <table style="width: 100%">
+    <tr>
+      <td align="center" style="padding: 20px">
+        <div class="buttonbigclass">
+
+          <table style="width: 100%;">
+            <tr>
+              <td align="center">
+                <ion-icon name="airplane-outline" [color]="Basics.Ionicfarben.BAEBlau" style="font-size: 120px"></ion-icon>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">
+                <ion-text [color]="Basics.Ionicfarben.Grau" style="font-size: 26px">BAE Cockpit</ion-text>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center; font-size: 90%; color: gray">
+                Version: {{Basics.AppVersionName}} / {{Basics.AppVersionDatum}}
+              </td>
+            </tr>
+          </table>
+
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <ion-text color="baeblau" style="font-size: 120%"><b>Benutzerauswahl</b></ion-text>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+
+        <ion-radio-group [value]="ActiveUser !== null ? ActiveUser.username : null" (ionChange)="UserChanged($event)">
+
+          <table class="paddingtable">
+            <tr *ngFor="let Benutzer of Benutzerliste">
+              <td><ion-radio [value]="Benutzer.username"></ion-radio></td><td>{{Benutzer.name}}</td><td>{{Benutzer.username}}</td>
+            </tr>
+          </table>
+
+        </ion-radio-group>
+
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <ion-button (click)="AbsendenClickedHandler()" color="grau" [expand]="ActiveUser !== null" size="small">Absenden</ion-button>
+      </td>
+    </tr>
+  </table>
+
+</ion-content>
+<ion-footer>
+  <page-footer #PageFooter>
+
+  </page-footer>
+</ion-footer>

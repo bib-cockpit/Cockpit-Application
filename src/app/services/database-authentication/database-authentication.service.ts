@@ -27,6 +27,7 @@ const Keys = {
 export class DatabaseAuthenticationService {
 
   public LoginSuccessEvent: EventEmitter<any> = new EventEmitter<any>();
+  public ActivUserChanged: EventEmitter<any> = new EventEmitter<any>();
   public ActiveUser: AccountInfo;
   public SecurityEnabled: boolean;
   private DevelopmentUser: AccountInfo;
@@ -78,6 +79,84 @@ export class DatabaseAuthenticationService {
     }
   }
 
+  public async GetAcountnumber(): Promise<number> {
+
+    try {
+
+      let Accounts: any[];
+
+      return new Promise((resove, reject) => {
+
+        Accounts = this.MSALService.instance.getAllAccounts();
+
+        resove(Accounts.length);
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Database Authentication', 'GetAcountnumber', this.Debug.Typen.Service);
+    }
+  }
+
+  public async GetAcountliste(): Promise<any[]> {
+
+    try {
+
+      let Accounts: any[];
+
+      return new Promise((resove, reject) => {
+
+        Accounts = this.MSALService.instance.getAllAccounts();
+
+        resove(Accounts);
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Database Authentication', 'GetAcountliste', this.Debug.Typen.Service);
+    }
+  }
+
+  public async GetActiveUser(): Promise<any> {
+
+    try {
+
+      let Account: any;
+
+      return new  Promise((resolve) => {
+
+        Account = this.MSALService.instance.getActiveAccount();
+
+        resolve(Account);
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Database Authentication', 'GetActiveUser', this.Debug.Typen.Service);
+    }
+  }
+
+  public async SetActiveUserfromUserliste(account: any): Promise<any> {
+
+    try {
+
+      return new  Promise((resolve) => {
+
+        this.MSALService.instance.setActiveAccount(account);
+
+        this.ActiveUser = account;
+
+        resolve(true);
+
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Database Authentication', 'SetActiveUserfromUserliste', this.Debug.Typen.Service);
+    }
+
+  }
+
   public async SetActiveUser(): Promise<any> {
 
     try {
@@ -122,7 +201,7 @@ export class DatabaseAuthenticationService {
 
           if(Account !== null) {
 
-            this.ActiveUser  = Account;
+            this.ActiveUser = Account;
 
             resolve(true);
           }

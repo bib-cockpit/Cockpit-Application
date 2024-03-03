@@ -16,6 +16,11 @@ const routes: Routes = [
     // canLoad: [SecurityService]
   },
   {
+    path: 'UserauswahlPage',
+    loadChildren: () => import('./pages/common-userauswahl/common-userauswahl.module').then(m => m.CommonUserauswahlPageModule),
+    // canLoad: [SecurityService]
+  },
+  {
     path: 'HomePage',
     loadChildren: () => import('./pages/common-home/common-home.module').then(m => m.CommonHomePageModule),
     // canLoad: [SecurityService]

@@ -9,6 +9,7 @@ import {
 import {PjPlanungsmatrixPage} from "../../pages/pj-planungsmatrix/pj-planungsmatrix.page";
 import {CommonUrlaubFreigabenPage} from "../../pages/common-urlaub-freigaben/common-urlaub-freigaben.page";
 import {PjSchnellaufgabenListePage} from "../../pages/pj-schnellaufgaben-liste/pj-schnellaufgaben-liste.page";
+import {CommonUserauswahlPage} from "../../pages/common-userauswahl/common-userauswahl.page";
 
 const _MitarbeiterdatenKeys = {
 
@@ -202,6 +203,7 @@ const _Pages = {
   UrlaubEinstellungenPage: 'UrlaubEinstellungenPage',
   UrlaubUebersichtPage: 'UrlaubUebersichtPage',
   UrlaubFreigabenPage: 'UrlaubFreigabenPage',
+  UserauswahlPage: 'UserauswahlPage',
 
   // Firma
 

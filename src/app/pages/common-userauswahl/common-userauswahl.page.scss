@@ -1,0 +1,13 @@
+
+.buttonbigclass {
+
+  display: flex;
+  justify-content: center; // horizontal
+  align-items: center; // vertikal
+  border: 2px solid gray;
+  border-radius: 10px;
+  width: 220px;
+  height: 220px;
+  cursor: pointer;
+  background: white;
+}

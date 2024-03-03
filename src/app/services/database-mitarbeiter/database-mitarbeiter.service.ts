@@ -567,6 +567,8 @@ export class DatabaseMitarbeiterService {
 
     try {
 
+      debugger;
+
       let Index: number = lodash.findIndex(this.Pool.Mitarbeiterliste, { Email: email});
 
       return Index !== -1;

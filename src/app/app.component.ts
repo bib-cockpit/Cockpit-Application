@@ -28,11 +28,11 @@ import {DatabaseSimontabelleService} from "./services/database-simontabelle/data
 })
 export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
-  private AuthSubscription: Subscription;
   private isIframe: boolean;
   private readonly Destroying = new Subject<void>();
   public Zoomfaktor: number;
   private Settingssubscription: Subscription;
+  private ActiveUserSubscription: Subscription;
 
   constructor(private platform: Platform,
               private Pool: DatabasePoolService,
@@ -55,10 +55,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
               private Debug: DebugProvider) {
     try {
 
-      this.AuthSubscription     = null;
-      this.isIframe             = false;
-      this.Zoomfaktor           = 100;
-      this.Settingssubscription = null;
+      this.isIframe               = false;
+      this.Zoomfaktor             = 100;
+      this.Settingssubscription   = null;
+      this.ActiveUserSubscription = null;
 
     } catch (error) {
 
@@ -69,6 +69,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
   ngOnDestroy(): void {
 
     try {
+
+      this.Settingssubscription.unsubscribe();
+      this.Settingssubscription = null;
+
+
 
       this.Destroying.next(undefined);
       this.Destroying.complete();
@@ -140,16 +145,46 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
     try {
 
-      let Mitarbeiter: Mitarbeiterstruktur;
-      let Page: string;
+      let Accountanzahl: number;
 
       this.Debug.ShowMessage('Start App', 'App Component', 'StartApp', this.Debug.Typen.Component);
 
       await this.platform.ready();
-      await this.AuthService.SetActiveUser();
+
+      this.ActiveUserSubscription = this.AuthService.ActivUserChanged.subscribe(() => {
+
+        this.StartAppExecution();
+      });
 
       this.Basics.Contentbreite = this.platform.width();
       this.Basics.Contenthoehe  = this.platform.height();
+
+      Accountanzahl = await this.AuthService.GetAcountnumber();
+
+      if(Accountanzahl <= 1) {
+
+        await this.AuthService.SetActiveUser();
+        await this.StartAppExecution();
+      }
+      else {
+
+        this.Tools.SetRootPage(this.Const.Pages.UserauswahlPage);
+      }
+
+      // await this.AuthService.SetActiveUser();
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'App Component', 'StartApp', this.Debug.Typen.Component);
+    }
+  }
+
+  private async StartAppExecution() {
+
+    try {
+
+      let Mitarbeiter: Mitarbeiterstruktur;
+      let Page: string;
 
       if(this.AuthService.ActiveUser !== null) {
 
@@ -198,7 +233,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
           this.Pool.ProgressMessage = 'Lade Change Log';
 
-          this.Pool.ReadChangelogliste();
+          await this.Pool.ReadChangelogliste();
 
           this.Pool.CurrentProgressValue++;
 
@@ -258,17 +293,19 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
               return currentmitarbeiter.UserID === User.id;
             });
 
+
             if(lodash.isUndefined(Mitarbeiter)) {
 
-              console.log('Mitarbeiter wurde nicht gefunden:');
-              console.log(User);
+              console.log('Mitarbeiter wurde nicht gefunden: ' + User.displayName);
+
 
               if(User.mail.toLowerCase().indexOf('admin') === -1) {
 
                 Mitarbeiter = this.MitarbeiterDB.ConvertGraphuserToMitarbeiter(User);
 
                 console.log('Neuer Mitrabeiter:');
-                console.log(Mitarbeiter);
+                console.log(Mitarbeiter.Vorname + ' ' + Mitarbeiter.Name);
+
 
                 await this.MitarbeiterDB.AddMitarbeiter(Mitarbeiter);
               }
@@ -400,11 +437,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
         this.AuthService.SetShowLoginStatus();
 
         this.Debug.ShowMessage('Benutzer ist nicht angemeldet', 'App Component', 'StartApp', this.Debug.Typen.Component);
-
       }
+
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, 'App Component', 'StartApp', this.Debug.Typen.Component);
+      this.Debug.ShowErrorMessage(error, 'file', 'function', this.Debug.Typen.Page);
     }
   }
 
