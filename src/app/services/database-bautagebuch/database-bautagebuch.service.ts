@@ -581,6 +581,7 @@ export class DatabaseBautagebuchService {
         DirectoryID: string;
         UserID:      string;
         Token:       string;
+        Signatur:    string;
         Empfaengerliste:   any[];
         CcEmpfaengerliste: any[];
       };
@@ -610,6 +611,7 @@ export class DatabaseBautagebuchService {
         UserID:      this.GraphService.Graphuser.id,
         FileID:      bautagebuch.FileID,
         Filename:    bautagebuch.Filename,
+        Signatur:    this.Pool.GetFilledSignatur(this.Pool.Mitarbeiterdaten, false),
         Token:       token,
         Empfaengerliste:   bautagebuch.Empfaengerliste,
         CcEmpfaengerliste: bautagebuch.CcEmpfaengerliste

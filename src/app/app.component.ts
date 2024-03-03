@@ -372,7 +372,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
           }
           else {
 
-            Page = this.Const.Pages.PjSimontabellelistePage; // PjListePage; // PjSimontabellelistePage; // PjProtokolleListePage; // PjProtokolleListePage; // PjAufgabenlistePage; // UrlaubFreigabenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; //
+            Page = this.Const.Pages.PjSchnellaufgabenListePage; // PjSimontabellelistePage; // PjListePage; // PjSimontabellelistePage; // PjProtokolleListePage; // PjProtokolleListePage; // PjAufgabenlistePage; // UrlaubFreigabenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; //
             // PjBaustelleLoplistePage; // UrlaubEinstellungenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; // FiMitarbeiterlistePage; // UrlaubsplanungPage; // FiStandortelistePage; // UrlaubsplanungPage; // UrlaubsplanungPage; // .PjProtokolleListePage;  // PjListePage; // PjAufgabenlistePage; // .PjFilebrowserPage;  // PjPlanungsmatrixPage; // PjFilebrowserPage; // HomePage; // .PjPlanungsmatrixPage; //.PjAufgabenlistePage; // EinstellungenPage; // PjAufgabenlistePage ; // HomePage ; // EmaillistePage //  HomePage PjBaustelleTagebuchlistePage PjBaustelleLoplistePage
 
             this.ProjekteDB.SetProjekteliste(this.ProjekteDB.CurrentFavorit.Projekteliste); // Dise Zeile bie HomePage wieder raus -> Daten über Play Button laden
@@ -469,6 +469,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
         case this.Const.Pages.PjAufgabenlistePage:
 
           this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Aufgabenliste;
+
+          break;
+
+        case this.Const.Pages.PjSchnellaufgabenListePage:
+
+          this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Schnellaufgabenliste;
 
           break;
 

@@ -2372,5 +2372,19 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
       this.Debug.ShowErrorMessage(error, 'LOP Liste', 'EmailEmpfaengerExternClickedHandler', this.Debug.Typen.Page);
     }
   }
+
+  TestButtonClicked(event: MouseEvent) {
+
+    try {
+
+      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Schnellaufgabenliste;
+
+      this.Tools.PushPage(this.Const.Pages.PjSchnellaufgabenListePage);
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'file', 'function', this.Debug.Typen.Page);
+    }
+  }
 }
 

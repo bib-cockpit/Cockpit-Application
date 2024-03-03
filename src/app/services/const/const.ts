@@ -8,6 +8,7 @@ import {
 } from "../../pages/pj-festlegungsliste/pj-festlegungsliste.page";
 import {PjPlanungsmatrixPage} from "../../pages/pj-planungsmatrix/pj-planungsmatrix.page";
 import {CommonUrlaubFreigabenPage} from "../../pages/common-urlaub-freigaben/common-urlaub-freigaben.page";
+import {PjSchnellaufgabenListePage} from "../../pages/pj-schnellaufgaben-liste/pj-schnellaufgaben-liste.page";
 
 const _MitarbeiterdatenKeys = {
 
@@ -245,7 +246,9 @@ const _Pages = {
 
   PjPlanungsmatrixPage: 'PjPlanungsmatrixPage',
 
-  PjSimontabellelistePage: 'PjSimontabellelistePage'
+  PjSimontabellelistePage: 'PjSimontabellelistePage',
+
+  PjSchnellaufgabenListePage: 'PjSchnellaufgabenListePage'
 };
 
 const _Treeitemtypvarianten = {

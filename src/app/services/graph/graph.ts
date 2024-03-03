@@ -466,7 +466,6 @@ export class Graphservice {
 
       return new Promise((resolve, reject) => {
 
-
         if(token !== null) {
 
           graphClient.api('/me').select('*').get().then((result: User) => {
@@ -1552,6 +1551,8 @@ export class Graphservice {
             Download.id      = result.id;
             Download.url     = result['@microsoft.graph.downloadUrl'];
             Download.context = result['@odata.context'];
+
+            debugger;
 
             this.CurrentPDFDownload = Download;
 

@@ -26,7 +26,7 @@
           <td style="width: 100px; font-weight: bold">Datum</td>
           <td style="width: auto; font-weight: bold">Titel</td>
           <td style="width: 80px; font-weight: bold; text-align: center">Einträge</td>
-          <td style="width: 80px; font-weight: bold; text-align: center">Status</td>
+          <td style="width: 100px; font-weight: bold; text-align: center">Status</td>
         </tr>
       </table>
     </div>
@@ -43,7 +43,7 @@
               </div>
             </td>
             <td style="width: 80px; text-align: center">{{Tagebuch.Eintraegeliste.length}}</td>
-            <td style="width: 80px;">
+            <td style="width: 100px;">
 
                 <table class="nobordersmalltable" width="100%">
                   <tr>
@@ -60,16 +60,22 @@
                           <ion-icon  name="document" [color]="Basics.Ionicfarben.BAEBlau"></ion-icon>
                         </div>
                       </td>
+                      <td style="width: 10px"></td>
+                      <td>
+                        <div (click)="DownloadPdfButtonClicked($event, Tagebuch)" class="maildivclass">
+                          <ion-icon  name="download-outline" [color]="Basics.Ionicfarben.Orange"></ion-icon>
+                        </div>
+                      </td>
 
                     </ng-container>
 
                   </tr>
                   <ng-container *ngIf="Tagebuch.GesendetZeitstempel !== null">
                     <tr>
-                      <td colspan="3" style="text-align: center; font-size: 80%">{{Tools.GetDatumFromZeitstempel(Tagebuch.GesendetZeitstempel)}}</td>
+                      <td colspan="5" style="text-align: center; font-size: 80%">{{Tools.GetDatumFromZeitstempel(Tagebuch.GesendetZeitstempel)}}</td>
                     </tr>
                     <tr>
-                      <td colspan="3" style="text-align: center; font-size: 80%">{{Tools.GetZeitFromZeitstempel(Tagebuch.GesendetZeitstempel)}}</td>
+                      <td colspan="5" style="text-align: center; font-size: 80%">{{Tools.GetZeitFromZeitstempel(Tagebuch.GesendetZeitstempel)}}</td>
                     </tr>
                   </ng-container>
                 </table>

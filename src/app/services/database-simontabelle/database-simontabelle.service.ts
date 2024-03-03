@@ -889,6 +889,7 @@ export class DatabaseSimontabelleService {
                 if(Rechnung.RechnungID === this.CurrentRechnung.RechnungID) {
 
                   Rechnung.FileID              = Teamsfile.id;
+                  Rechnung.Filename            = filename;
                   Rechnung.GesendetZeitstempel = Teamsfile.GesendetZeitstempel;
                   Rechnung.GesendetZeitstring  = Teamsfile.GesendetZeitstring;
                 }

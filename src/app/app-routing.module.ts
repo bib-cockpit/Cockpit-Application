@@ -82,6 +82,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/pj-aufgaben-liste/pj-aufgaben-liste.module').then(m => m.PjAufgabenListePageModule)
   },
   {
+    path: 'PjSchnellaufgabenListePage',
+    loadChildren: () => import('./pages/pj-schnellaufgaben-liste/pj-schnellaufgaben-liste.module').then(m => m.PjSchnellaufgabenListePageModule)
+  },
+  {
     path: 'PjProtokolleListePage',
     loadChildren: () => import('./pages/pj-protokolle-liste/pj-protokolle-liste.module').then(m => m.PjProtokolleListePageModule)
   },

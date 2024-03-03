@@ -548,4 +548,16 @@ export class PjBaustelleTagebuchlistePage implements OnInit, OnDestroy {
       this.Debug.ShowErrorMessage(error, 'Bautagebuch Liste', 'ShowPdfButtonClicked', this.Debug.Typen.Page);
     }
   }
+
+  async DownloadPdfButtonClicked($event: MouseEvent, Tagebuch: Bautagebuchstruktur) {
+
+    try {
+
+      await this.GraphService.DownloadPDFSiteFileViaLink(Tagebuch.FileID);
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Bautagebuch Liste', 'DownloadPdfButtonClicked', this.Debug.Typen.Page);
+    }
+  }
 }

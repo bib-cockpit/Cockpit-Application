@@ -35,6 +35,7 @@ export class MenueService {
   public ProjekteMenuebereiche = {
 
     Aufgabenliste: 'Aufgabenliste',
+    Schnellaufgabenliste: 'Schnellaufgabenliste',
     Protokolle:    'Protokolle',
     LOPListe:      'LOP Liste',
     Bautagebuch:   'Bautagebuch',
@@ -162,6 +163,12 @@ export class MenueService {
 
               break;
 
+            case this.ProjekteMenuebereiche.Schnellaufgabenliste:
+
+              this.Tools.SetRootPage(this.Const.Pages.PjSchnellaufgabenListePage);
+
+              break;
+
             case this.ProjekteMenuebereiche.Aufgabenliste:
 
               switch (this.Aufgabenlisteansicht) {
@@ -185,6 +192,12 @@ export class MenueService {
                   break;
 
                 case this.Aufgabenlisteansichten.Meilensteine:
+
+                  this.Tools.SetRootPage(this.Const.Pages.PjAufgabenlistePage);
+
+                  break;
+
+                case this.Aufgabenlisteansichten.Projekt:
 
                   this.Tools.SetRootPage(this.Const.Pages.PjAufgabenlistePage);
 

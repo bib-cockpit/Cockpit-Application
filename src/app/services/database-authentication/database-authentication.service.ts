@@ -204,6 +204,12 @@ export class DatabaseAuthenticationService {
                 this.Login();
 
                 break;
+
+              case 'monitor_window_timeout':
+
+                this.Login();
+
+                break;
             }
           }
 

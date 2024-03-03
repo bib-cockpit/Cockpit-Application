@@ -671,6 +671,8 @@ export class PjSimontabelleListePage implements OnInit, OnDestroy {
       File.id   = Rechnung.FileID;
       File.name = Rechnung.Filename;
 
+      debugger;
+
       await this.GraphService.DownloadPDFSiteFile(File);
 
       this.Tools.PushPage(this.Const.Pages.PDFViewerPage);

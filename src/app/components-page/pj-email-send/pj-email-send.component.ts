@@ -478,7 +478,7 @@ export class PjEmailSendComponent implements OnInit, OnDestroy, AfterViewInit {
 
           try {
 
-            NextSimontabellen = await this.DBSimontabelle.SaveSimontabelleInSites(Filename, Projekt, Simontabellen, Standort, Mitarbeiter,true);
+            NextSimontabellen = await this.DBSimontabelle.SaveSimontabelleInSites(Filename, Projekt, Simontabellen, Standort, Mitarbeiter,false);
 
           } catch (error) {
 
