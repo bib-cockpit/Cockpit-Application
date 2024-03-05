@@ -49,6 +49,7 @@ export class DatabaseProjekteService {
   public SitesPathesChanged: EventEmitter<Teamsfilesstruktur> = new EventEmitter<Teamsfilesstruktur>();
 
   public  FavoritenZeilenanzahl: number;
+  public SchnellaufgabeProjekt: Projektestruktur;
   public FavoritenSpaltenanzahl: number;
   public  FavoritenCellbreite: number;
   public Projektfarbenliste: Projektfarbenstruktur[];
@@ -77,6 +78,7 @@ export class DatabaseProjekteService {
       this.FavoritenCellbreite        = 100;
       this.Projektfarbenliste         = [];
       this.GesamtprojektlisteHasDatenerror = false;
+      this.SchnellaufgabeProjekt = null;
 
       this.Projektfarbenliste.push({Name: 'Grau',          Background: '#444444', Foreground: 'white'});
       this.Projektfarbenliste.push({Name: 'Hellblau',      Background: '#2554C7', Foreground: ''});
@@ -271,6 +273,8 @@ export class DatabaseProjekteService {
     try {
 
       this.Gesamtprojektliste = [];
+
+      this.Debug.ShowMessage('ReadGesamtprojektliste', 'Database Projekte', 'ReadGesamtprojektliste', this.Debug.Typen.Service);
 
       let headers: HttpHeaders = new HttpHeaders({
 

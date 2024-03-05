@@ -50,40 +50,26 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
   public Auswahlindex: number;
   public Auswahltitel: string;
   public ShowAuswahl: boolean;
-  public ShowMitarbeiterauswahl: boolean;
-  public ShowBeteiligteauswahl: boolean;
   public DialogPosY: number;
   public Dialoghoehe: number;
   public Dialogbreite: number;
-  public KostenDialogbreite: number;
-  public KostenDialoghoehe: number;
   public AuswahlIDliste: string[];
-  public ShowKostengruppenauswahlFestlegungskategorie: boolean;
-  public StrukturDialoghoehe: number;
-  public ShowZeitspannefilter: boolean;
   public DatenLoadedSubscription: Subscription;
-  public ProjektpunktSubscription: Subscription;
-  public ShowDateKkPicker: boolean;
   public Datum: Moment;
   public Auswahlhoehe: number;
-  private SettingsSubscription: Subscription;
-  private MitarbeiterSubscription: Subscription;
-  public ShowProjektschnellauswahl: boolean;
-  public Listenhoehe: number;
-  public Tagbreite: number;
   public Headerhoehe: number;
   public Heute: Moment;
-  public ProtokollSubscription: Subscription;
-  public ProjektpunktelisteSubscription: Subscription;
-  private FavoritenProjektSubcription: Subscription;
-  public Timelinebreite: number;
-  public Pixelperminute: number;
+  public SchnellaufgabelisteSubscription: Subscription;
   public ShowEmailSenden: boolean;
   public EmailDialogbreite: number;
-  public Kostengruppeauswahltitel: string;
   public Spaltenanzahl: number;
   public Zeilenanzahl: number;
   public Projekteliste: Projektestruktur[][];
+  public ShowEditor: boolean;
+  public Schnellaufgabenliste: Projektpunktestruktur[][];
+  public HomeMouseOver: boolean;
+  public Contentbreite: number;
+  public Contenthoehe: number;
 
   constructor(public Displayservice: DisplayService,
               public Basics: BasicsProvider,
@@ -104,6 +90,10 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
       this.Spaltenanzahl = 2;
       this.Zeilenanzahl  = 1;
       this.Projekteliste = [];
+      this.ShowEditor    = false;
+      this.HomeMouseOver = false;
+      this.Contentbreite  = 1000;
+      this.Contenthoehe   = 800;
 
 
     } catch (error) {
@@ -118,6 +108,9 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
 
       this.Basics.MeassureInnercontent(this.PageHeader, this.PageFooter);
 
+      this.Contentbreite = this.Basics.Contentbreite;
+      this.Contenthoehe  = this.Basics.InnerContenthoehe - 10;
+
 
 
     } catch (error) {
@@ -130,47 +123,19 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
 
     try {
 
+      this.InitScreen();
+
       this.DatenLoadedSubscription = this.Pool.LoadingAllDataFinished.subscribe(() => {
 
-        this.InitScreen();
         this.PrepareDaten();
       });
 
-      this.SettingsSubscription = this.Pool.MitarbeitersettingsChanged.subscribe(() => {
+      this.SchnellaufgabelisteSubscription = this.Pool.SchnellaufgabenlisteChanged.subscribe(() => {
 
         this.PrepareDaten();
       });
-
-      this.ProjektpunktSubscription = this.Pool.ProjektpunktChanged.subscribe(() => {
-
-
-      });
-
-      this.MitarbeiterSubscription = this.Pool.MitarbeiterdatenChanged.subscribe(() => {
-
-        this.PrepareDaten();
-      });
-
-      this.FavoritenProjektSubcription = this.DBProjekte.CurrentFavoritenProjektChanged.subscribe(() => {
-
-        this.PrepareDaten();
-      });
-
-      this.ProtokollSubscription = this.Pool.ProtokolllisteChanged.subscribe(() => {
-
-        this.PrepareDaten();
-      });
-
-      this.ProjektpunktelisteSubscription = this.Pool.ProjektpunktelisteChanged.subscribe(() => {
-
-        this.PrepareDaten();
-      });
-
-      this.Displayservice.ResetDialogliste();
 
       this.PrepareDaten();
-
-      this.Auswahlhoehe = this.Basics.Contenthoehe - 400;
 
     } catch (error) {
 
@@ -178,20 +143,26 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
     }
   }
 
+  StatusCheckChanged(event: { status: boolean; index: number; event: any }, schnellaufgabe: Projektpunktestruktur) {
+
+    try {
+
+      if(event.status === true) {
+
+        this.DBProjektpunkte.DeleteSchnellaufgabe(schnellaufgabe);
+      }
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Schenllaufgaben Liste', 'StatusCheckChanged', this.Debug.Typen.Component);
+    }
+  }
 
   ngOnDestroy(): void {
 
     try {
 
       this.DatenLoadedSubscription.unsubscribe();
-      this.ProjektpunktSubscription.unsubscribe();
-      this.SettingsSubscription.unsubscribe();
-      this.MitarbeiterSubscription.unsubscribe();
-      this.ProtokollSubscription.unsubscribe();
-      this.ProjektpunktelisteSubscription.unsubscribe();
-      this.FavoritenProjektSubcription.unsubscribe();
-
-
+      this.SchnellaufgabelisteSubscription.unsubscribe();
 
     } catch (error) {
 
@@ -229,9 +200,11 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
 
       let Projekt: Projektestruktur;
       let Index: number = 0;
+      let Eintrag: Projektpunktestruktur;
 
-      this.Projekteliste = [];
-      this.Zeilenanzahl  = Math.ceil(this.DBProjekte.CurrentFavorit.Projekteliste.length / this.Spaltenanzahl);
+      this.Projekteliste        = [];
+      this.Schnellaufgabenliste = [];
+      this.Zeilenanzahl         = Math.ceil(this.DBProjekte.CurrentFavorit.Projekteliste.length / this.Spaltenanzahl);
 
       for(let Zeilenindex = 0; Zeilenindex < this.Zeilenanzahl; Zeilenindex++) {
 
@@ -244,6 +217,13 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
             Projekt = this.DBProjekte.GetProjektByID(this.DBProjekte.CurrentFavorit.Projekteliste[Index]);
 
             this.Projekteliste[Zeilenindex][Spaltenindex] = Projekt;
+
+            this.Schnellaufgabenliste[Projekt.Projektkey] = this.Pool.Projektschnellaufgabenliste[Projekt.Projektkey];
+
+            for(Eintrag of this.Schnellaufgabenliste[Projekt.Projektkey]) {
+
+              Eintrag.Aufgabe = Eintrag.Aufgabe.replace('<p>', '<p style="padding: 0px !important; margin: 0px !important;">');
+            }
 
           } else {
 
@@ -260,19 +240,35 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
     }
   }
 
-  GetDatum():string {
+  GetDatum(zeitstempel: number):string {
 
     try {
 
-      let Heute: Moment = moment().locale('de');
+      let Datum: Moment = moment(zeitstempel).locale('de');
 
-      let Text: string = Heute.format('dddd, DD.MM.YYYY') + ' / KW ' + Heute.isoWeek();
+      let Text: string = Datum.format('DD.MM.YY');
 
       return Text;
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, 'Schenllaufgaben Liste', 'function', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error.message, 'Schenllaufgaben Liste', 'GetDatum', this.Debug.Typen.Page);
+    }
+  }
+
+  GetUhrzeit(zeitstempel: number):string {
+
+    try {
+
+      let Datum: Moment = moment(zeitstempel).locale('de');
+
+      let Text: string = Datum.format('HH:mm');
+
+      return Text;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Schenllaufgaben Liste', 'GetUhrzeit', this.Debug.Typen.Page);
     }
   }
 
@@ -319,7 +315,24 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
     }
   }
 
-  TestButtonClicked($event: MouseEvent) {
+  AddAufgabeClicked(Projekt: Projektestruktur, Zeilenindex: number, Spaltenindex: number) {
+
+    try {
+
+      debugger;
+
+      this.DBProjektpunkte.CurrentSchenllaufgabe                = this.DBProjektpunkte.GetNewProjektpunkt(Projekt, 0);
+      this.DBProjektpunkte.CurrentSchenllaufgabe.Schnellaufgabe = true;
+      this.DBProjekte.SchnellaufgabeProjekt                     = lodash.clone(Projekt);
+      this.ShowEditor                                           = true;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Schenllaufgaben Liste', 'AddAufgabeClicked', this.Debug.Typen.Page);
+    }
+  }
+
+  HomeButtonClicked() {
 
     try {
 
@@ -327,8 +340,9 @@ export class PjSchnellaufgabenListePage implements OnInit, OnDestroy {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'Schenllaufgaben Liste', 'TestButtonClicked', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'Schenllaufgaben Liste', 'HomeButtonClicked', this.Debug.Typen.Page);
     }
+
   }
 }
 

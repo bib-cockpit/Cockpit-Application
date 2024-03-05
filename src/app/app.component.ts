@@ -185,6 +185,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
       let Mitarbeiter: Mitarbeiterstruktur;
       let Page: string;
+      let Result: any;
 
       if(this.AuthService.ActiveUser !== null) {
 
@@ -214,7 +215,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
             this.Pool.ProgressMessage = 'Lade eigens Bild';
 
-            await this.GraphService.GetOwnUserimage();
+            Result = await this.GraphService.GetOwnUserimage();
+
+            if(Result === null) this.Debug.ShowMessage('Benutzerbild konnte nicht geladen werden.', 'App Component', 'StartApp', this.Debug.Typen.Component);
 
             this.Pool.CurrentProgressValue++;
           }

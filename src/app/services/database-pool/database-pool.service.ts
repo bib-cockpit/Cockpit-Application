@@ -36,6 +36,7 @@ export class DatabasePoolService {
   public Standorteliste:          Standortestruktur[];
   public Mitarbeiterliste:        Mitarbeiterstruktur[];
   public Projektpunkteliste:      Projektpunktestruktur[][];
+  public Projektschnellaufgabenliste: Projektpunktestruktur[][];
   public DeletedProjektpunkteliste: Projektpunktestruktur[][];
   public Protokollliste:          Protokollstruktur[][];
   public Bautagebuchliste:        Bautagebuchstruktur[][];
@@ -73,6 +74,7 @@ export class DatabasePoolService {
   public ProjektpunktStatusChanged: EventEmitter<any> = new EventEmitter<any>();
   public ProjektpunktKostengruppeChanged: EventEmitter<any> = new EventEmitter<any>();
   public ProtokolllisteChanged: EventEmitter<any> = new EventEmitter<any>();
+  public SchnellaufgabenlisteChanged: EventEmitter<any> = new EventEmitter<any>();
   public ProtokollprojektpunktChanged: EventEmitter<any> = new EventEmitter<any>();
   public LOPListeprojektpunktChanged: EventEmitter<any> = new EventEmitter<any>();
   public ProjektpunktChanged: EventEmitter<any> = new EventEmitter<any>();
@@ -119,7 +121,7 @@ export class DatabasePoolService {
       this.Standorteliste           = [];
       this.Mitarbeiterliste         = [];
       this.Projektpunkteliste       = [];
-      this.Projektpunkteliste       = [];
+      this.Projektschnellaufgabenliste = [];
       this.Protokollliste           = [];
       this.Changlogliste            = [];
       this.Bautagebuchliste         = [];
@@ -310,7 +312,7 @@ export class DatabasePoolService {
 
       return new Promise((resolve, reject) => {
 
-        Params  = new HttpParams({ fromObject: { projektkey: projekt.Projektkey, deleted: false }} );
+        Params  = new HttpParams({ fromObject: { projektkey: projekt.Projektkey, deleted: false, Schnellaufgabe: false }} );
         Headers = new HttpHeaders({
 
           'content-type': 'application/json',
@@ -355,6 +357,7 @@ export class DatabasePoolService {
               if(lodash.isUndefined(Projektpunkt.Planung_relevant))       Projektpunkt.Planung_relevant       = true;
               if(lodash.isUndefined(Projektpunkt.LV_Eintrag))             Projektpunkt.LV_Eintrag             = false;
               if(lodash.isUndefined(Projektpunkt.Planung_Eintrag))        Projektpunkt.Planung_Eintrag        = false;
+              if(lodash.isUndefined(Projektpunkt.Schnellaufgabe))         Projektpunkt.Schnellaufgabe         = false;
 
               Projektpunkt.Anmerkungenliste.forEach((Anmerkung: Projektpunktanmerkungstruktur) => {
 
@@ -375,6 +378,57 @@ export class DatabasePoolService {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Database Pool', 'ReadProjektpunkteliste', this.Debug.Typen.Service);
+    }
+  }
+
+  public ReadProjektschnellaufgabenliste(projekt: Projektestruktur): Promise<any> {
+
+    try {
+
+      let Params: HttpParams;
+      let Headers: HttpHeaders;
+      let ProjektpunkteObservable: Observable<any>;
+
+      this.Projektschnellaufgabenliste[projekt.Projektkey] = [];
+
+      return new Promise((resolve, reject) => {
+
+        Params  = new HttpParams({ fromObject: { projektkey: projekt.Projektkey, deleted: false, Schnellaufgabe: true }} );
+        Headers = new HttpHeaders({
+
+          'content-type': 'application/json',
+        });
+
+        ProjektpunkteObservable = this.Http.get(this.CockpitserverURL + '/projektpunkte', { headers: Headers, params: Params } );
+
+        ProjektpunkteObservable.subscribe({
+
+          next: (data) => {
+
+            this.Projektschnellaufgabenliste[projekt.Projektkey] = <Projektpunktestruktur[]>data;
+
+          },
+          complete: () => {
+
+            this.Debug.ShowMessage('Read ReadProjektschnellaufgaben liste von ' + projekt.Projektkurzname + ' fertig.', 'Database Pool', 'ReadProjektschnellaufgabenliste', this.Debug.Typen.Service);
+
+            this.Projektschnellaufgabenliste[projekt.Projektkey].forEach((Projektpunkt: Projektpunktestruktur) => {
+
+            });
+
+            resolve(true);
+          },
+          error: (error: HttpErrorResponse) => {
+
+            debugger;
+
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Database Pool', 'ReadProjektschnellaufgabenliste', this.Debug.Typen.Service);
     }
   }
 
@@ -789,6 +843,8 @@ export class DatabasePoolService {
 
       this.Mitarbeiterliste = [];
 
+      this.Debug.ShowMessage('ReadMitarbeiterliste', 'Database Pool', 'ReadMitarbeiterliste', this.Debug.Typen.Service);
+
       let headers: HttpHeaders = new HttpHeaders({
 
         'content-type': 'application/json',
@@ -926,6 +982,8 @@ export class DatabasePoolService {
 
       this.Changlogliste = [];
 
+      this.Debug.ShowMessage('ReadChangelogliste', 'Database Pool', 'ReadChangelogliste', this.Debug.Typen.Service);
+
       let headers: HttpHeaders = new HttpHeaders({
 
         'content-type': 'application/json',
@@ -976,6 +1034,8 @@ export class DatabasePoolService {
     try {
 
       this.Standorteliste = [];
+
+      this.Debug.ShowMessage('ReadStandorteliste', 'Database Pool', 'ReadStandorteliste', this.Debug.Typen.Service);
 
       let headers: HttpHeaders = new HttpHeaders({
 
@@ -1160,7 +1220,7 @@ export class DatabasePoolService {
 
     try {
 
-      let Steps: number           = 9;
+      let Steps: number           = 10;
       this.ShowProgress           = true;
       this.MaxProgressValue       = projektliste.length * Steps;
       this.CurrentProgressValue   = 0;
@@ -1178,6 +1238,12 @@ export class DatabasePoolService {
           this.ProgressMessage = 'Projektpunkte ' + Projekt.Projektkurzname;
 
           await this.ReadProjektpunkteliste(Projekt);
+
+          this.CurrentProgressValue++;
+
+          this.ProgressMessage = 'Projektschnellaufgaben ' + Projekt.Projektkurzname;
+
+          await this.ReadProjektschnellaufgabenliste(Projekt);
 
           this.CurrentProgressValue++;
 

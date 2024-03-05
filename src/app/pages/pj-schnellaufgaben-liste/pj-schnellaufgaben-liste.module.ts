@@ -29,6 +29,11 @@ import {PjFirmenAuswahlModule} from "../../components-page/pj-firmen-auswahl/pj-
 import {
     PjKostengruppenFestlegungskategorieAuswahlModule
 } from "../../components-page/pj-kostengruppen-festlegungkategorie-auswahl/pj-kostengruppen-festlegungskategorie-auswahl.module";
+import {
+    PjSchnellaufgabeEditorModule
+} from "../../components-page/pj-schnellaufgabe-editor/pj-schnellaufgabe-editor.module";
+import {SafePipeModule} from "../../pipes/safe.pipe.module";
+import {CheckboxClonModule} from "../../components/checkbox-clon/checkbox-clon.module";
 // import {AngularImageViewerModule} from "@hreimer/angular-image-viewer";
 
 
@@ -41,35 +46,38 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        IonicModule,
-        PageHeaderModule,
-        RouterModule.forChild(routes),
-        PageHeaderMenuModule,
-        PageFooterModule,
-        AuswahlDialogModule,
-        FiMitarbeiterAuswahlModule,
-        PjBeteiligtenAuswahlModule,
-        PjProtokollEditorModule,
-        PjProjektpunktEditorModule,
-        PjGebaeudeRaumauswahlModule,
-        PjProtokollListefilterModule,
-        PjProjektpunktelisteModule,
-        PjProjektpunktStatusdatePickerModule,
-        PjAufgabenListefilterModule,
-        PjMeinewocheEditorModule,
-        PjProjektpunktStatusdatePickerModule,
-        PjProjektpunktDateKwPickerModule,
-        PjProjekteSchnellauswahlModule,
-        PjBaustelleLoplisteEditorModule,
-        PjEmailSendModule,
-        PjFirmenAuswahlModule,
-        PjKostengruppenFestlegungskategorieAuswahlModule,
-        // AngularImageViewerModule,
+  imports: [
+    CommonModule,
+    IonicModule,
+    PageHeaderModule,
+    RouterModule.forChild(routes),
+    PageHeaderMenuModule,
+    PageFooterModule,
+    AuswahlDialogModule,
+    FiMitarbeiterAuswahlModule,
+    PjBeteiligtenAuswahlModule,
+    PjProtokollEditorModule,
+    PjProjektpunktEditorModule,
+    PjGebaeudeRaumauswahlModule,
+    PjProtokollListefilterModule,
+    PjProjektpunktelisteModule,
+    PjProjektpunktStatusdatePickerModule,
+    PjAufgabenListefilterModule,
+    PjMeinewocheEditorModule,
+    PjProjektpunktStatusdatePickerModule,
+    PjProjektpunktDateKwPickerModule,
+    PjProjekteSchnellauswahlModule,
+    PjBaustelleLoplisteEditorModule,
+    PjEmailSendModule,
+    PjFirmenAuswahlModule,
+    PjKostengruppenFestlegungskategorieAuswahlModule,
+    PjSchnellaufgabeEditorModule,
+    SafePipeModule,
+    CheckboxClonModule,
+    // AngularImageViewerModule,
 
 
-    ],
+  ],
   declarations: [PjSchnellaufgabenListePage],
   exports: [
     PjSchnellaufgabenListePage

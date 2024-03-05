@@ -1,0 +1,172 @@
+
+<div [style.z-index]="ZIndex" style="position: absolute; top: 0px; left: 0px; background: none; width: 100%; height: 100%">
+
+  <div  class="keeperdivclass" [style.background]="Displayservice.ShowOpacity(Displayservice.Dialognamen.Projektpunteditor) ? 'rgba(0, 0, 0, 0.5)' : 'none'" (click)="ContentClicked($event)">
+    <div class="contentdivclass"
+         [style.width.px]="Dialogbreite"
+         [style.height.px]="Dialoghoehe"
+         [style.top.px]="PositionY"  (click)="ContentClicked($event)">
+      <ion-header>
+        <page-header>
+          <div class="headerkeeperdiv" *ngIf="DB.CurrentSchenllaufgabe !== null">
+            <div class="headerleftdiv">
+              <table class="paddingsmalltable">
+                <tr>
+                  <td style="width: 4px"></td>
+                  <td><ion-icon [name]="'speedometer-outline'" color="weiss"></ion-icon></td>
+                  <td [style.color]="'white'">Aufgabe</td>
+                </tr>
+              </table>
+            </div>
+            <div class="headerrightdiv">
+              <table class="paddingsmalltable">
+                <tr>
+                  <td style="text-align: right; color: white">{{DBProjekt.SchnellaufgabeProjekt !== null ? DBProjekt.SchnellaufgabeProjekt.Projektname : 'Projekt unbekannt' }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </page-header>
+      </ion-header>
+
+      <ion-content>
+
+        <div class="contentinnerclass">
+
+          <ion-grid  *ngIf="DB.CurrentSchenllaufgabe !== null" class="maingridclass">
+            <ion-row>
+              <ion-col size="6">
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-text color="baeblau"><b>Status</b></ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="DB.CurrentSchenllaufgabe">
+                    <ion-col>
+
+                      <ion-radio-group [value]="DB.CurrentSchenllaufgabe.Status" (ionChange)="StatusChangedHandler($event)">
+
+                        <table class="paddingsmalltable">
+                          <tr>
+                            <td><ion-radio [value]="Const.Projektpunktstatustypen.Offen.Name"></ion-radio></td>
+                            <td>
+                              <div class="statusdivclass"
+                                   [style.color]="DB.CurrentSchenllaufgabe.Status === Const.Projektpunktstatustypen.Offen.Name ? 'white' : 'black'"
+                                   [style.background]="DB.CurrentSchenllaufgabe.Status === Const.Projektpunktstatustypen.Offen.Name ? DB.GetProjektpunktstusByName(DB.CurrentSchenllaufgabe.Status).Color : 'white'"
+                                    (click)="StatusClicked(Const.Projektpunktstatustypen.Offen.Name)">Offen</div>
+                            </td>
+                            <td style="width: 10px;"></td>
+                            <td><ion-radio [value]="Const.Projektpunktstatustypen.Geschlossen.Name"></ion-radio></td>
+                            <td>
+                              <div class="statusdivclass"
+                                   [style.color]="DB.CurrentSchenllaufgabe.Status === Const.Projektpunktstatustypen.Geschlossen.Name ? 'white' : 'black'"
+                                   [style.background]="DB.CurrentSchenllaufgabe.Status === Const.Projektpunktstatustypen.Geschlossen.Name ? DB.GetProjektpunktstusByName(DB.CurrentSchenllaufgabe.Status).Color : 'white'"
+                                   (click)="StatusClicked(Const.Projektpunktstatustypen.Geschlossen.Name)">Geschlossen</div>
+                            </td>
+                          </tr>
+                        </table>
+
+
+                      </ion-radio-group>
+
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-text color="baeblau"><b>Thema</b></ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="6">
+
+                        <editor *ngIf="Pool.Mitarbeitersettings !== null"
+                          [init]="{
+                            menubar:   false,
+                            statusbar: false,
+                            language: 'de',
+                            browser_spellcheck: true,
+                            newline_behavior: 'linebreak',
+                            height: 300,
+                            base_url: '/tinymce',
+                            suffix: '.min',
+                            auto_focus : true,
+                            content_style: 'body { color: black; margin: 0; line-height: 1.2; font-size: ' + Pool.Mitarbeitersettings.Textsize + 'px; }',
+                            toolbar: [
+                              { name: 'styles',      items: [ 'forecolor', 'backcolor' ] },
+                              { name: 'formatting',  items: [ 'bold', 'italic', 'underline', 'strikethrough' ] },
+                              { name: 'alignment',   items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
+                              { name: 'indentation', items: [ 'outdent', 'indent' ] }
+                            ],
+                          }"
+                          [apiKey]="'7hvzif1s8dafhu40z0kjgpw1y4zwc2p5cokjkfox946qpfjc'"
+                          [(ngModel)]="DB.CurrentSchenllaufgabe.Aufgabe"
+                          (onNodeChange)="AufgabeTextChangedHandler($event)"
+                          (onChange)="AufgabeTextChangedHandler($event)"
+                          (onPaste)="AufgabeTextChangedHandler($event)"
+                          (onCut)="AufgabeTextChangedHandler($event)"
+                          (onKeyPress)="AufgabeTextChangedHandler($event)">
+                        </editor>
+
+
+
+
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="DB.CurrentSchenllaufgabe._id !== null">
+              <ion-col>
+
+                <table>
+                  <tr>
+                    <td><checkbox-clon [Checked]="DeleteEnabled" (CheckChanged)="CanDeleteCheckedChanged($event)"></checkbox-clon></td>
+                    <td style="width: 6px"></td>
+                    <td>
+                      <ion-button size="small" color="rot" [disabled]="!DeleteEnabled" (click)="DeleteButtonClicked()">
+                        <ion-icon name="trash-outline" style="font-size: 20px"></ion-icon>
+                        <ion-text>Eintrag löschen</ion-text>
+                      </ion-button>
+                    </td>
+                  </tr>
+                </table>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-content>
+
+      <ion-footer>
+        <page-footer>
+          <table class="paddingsmalltable" width="100%">
+            <tr>
+              <td>
+                <div class="rootbuttonclass" (click)="CancelButtonClicked()">
+                  <ion-icon style="font-size: 28px" color="weiss" name="close-outline"></ion-icon>
+                </div>
+              <td style="width: 100%"></td>
+              <td>
+
+                <div class="rootbuttonclass" (click)="Valid === true ? OkButtonClicked() : null">
+                  <ion-icon style="font-size: 28px" [color]="Valid === true ? 'weiss' : 'grau'" name="save-outline"></ion-icon>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </page-footer>
+      </ion-footer>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

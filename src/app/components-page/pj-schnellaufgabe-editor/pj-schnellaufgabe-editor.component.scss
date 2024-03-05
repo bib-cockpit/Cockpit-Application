@@ -1,0 +1,227 @@
+.headerkeeperdiv {
+
+  width:   100%;
+  height:  40px;
+  display: flex;
+  flex-direction: row;
+}
+
+.headerleftdiv {
+
+  width:      30%;
+  height:     100%;
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: center; // vertikal
+}
+
+.headerrightdiv {
+
+  width:      70%;
+  height:     100%;
+  display: flex;
+  justify-content: flex-end; // horizontal
+  align-items: center; // vertikal
+  padding-right: 4px;
+}
+
+
+.infotable {
+
+  td {
+
+    font-size: 90%;
+    color: #444444;
+  }
+}
+
+.emaildivclass {
+
+  width: 100%;
+  height: auto;
+  overflow: auto;
+  background: silver;
+  padding: 4px;
+}
+.keeperdivclass {
+
+  width: 100%;
+  height: 100%;
+  position:absolute;
+}
+
+
+.contentdivclass {
+
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%);
+  display: flex;
+  flex-direction: column;
+}
+
+.menufilterbuttonclass {
+
+  padding: 2px;
+  padding-right: 4px;
+  cursor: pointer;
+  background: #7b6a58;
+  border-radius: 4px;
+}
+
+.contentinnerclass {
+
+  border-left:  3px solid #2190df;
+  border-right: 3px solid #2190df;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.teilnehmerbuttondivclass {
+
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: center; // vertikal
+  color: white;
+  height: 62px;
+  width: 200px;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.teilnehmerdivclass {
+
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: center; // vertikal
+  color: white;
+  height: 62px;
+  min-width: 200px;
+  border-radius: 4px;
+  padding: 2px;
+  background: #444444;
+}
+
+.teilnehmerinnerdivclass {
+
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: flex-start; // vertikal
+  color: white;
+  height: 54px;
+  min-width: 194px;
+  border-radius: 4px;
+  background: black;
+}
+
+.maingridclass {
+
+  --ion-grid-padding:        0px;
+  --ion-grid-column-padding: 0px;
+  --ion-grid-columns:        6;
+}
+
+ion-searchbar {
+
+}
+
+
+.maingridclass {
+
+  --ion-grid-padding:        0px;
+  --ion-grid-column-padding: 2px;
+}
+
+.kontaktclass {
+
+  width: 100%;
+  display: inline-block;
+  z-index: 1;
+}
+
+.kontaktbuttonclass {
+
+  margin: 2px;
+  border: 1px solid black;
+  border-radius: 4px;
+  width:  32px;
+  height: 32px;
+  display: flex;
+  justify-content: center; // horzonta
+  align-items: center; // vertical
+  z-index: 2;
+}
+
+.festlegungdivclass {
+
+  height: 680px;
+  width: 360px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.festlegungtopdivclass {
+
+  height: 50px;
+  width: 360px;
+  position: relative;
+}
+
+.festlegungcontentdivclass {
+
+  height: 630px;
+  width: 360px;
+  background: #FF9333;
+  position: relative;
+  overflow: auto;
+}
+
+a {
+  text-decoration: none;
+  color: #FF9333;
+}
+
+a:link {
+  text-decoration: none;
+  color: #FF9333;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #FF9333;
+}
+
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #FF9333;
+}
+
+a:active {
+  text-decoration: none;
+  color: #FF9333;
+}
+
+.statusdivclass {
+
+  border: 2px solid #7b6a58;
+  cursor: pointer;
+  width: 120px;
+  height: 32px;
+  display: flex;
+  justify-content: center; // horizontal
+  align-items:     center; // vertikal
+  flex-wrap: wrap;
+  color: black;
+  border-radius: 3px;
+}
+
+
+
+
+
+
+

@@ -681,6 +681,8 @@ export class Graphservice {
 
     try {
 
+      this.Debug.ShowMessage('Get OwnOutlook Categories', 'Graph', 'GetOwnOutlookCategories',  this.Debug.Typen.Service);
+
       let token = await this.AuthService.RequestToken('MailboxSettings.Read');
       let data: any;
       let Liste: Outlookkategoriesstruktur[] = [];
@@ -701,7 +703,7 @@ export class Graphservice {
 
             Liste.push(Eintrag);
 
-            console.log(Eintrag.id);
+            // console.log(Eintrag.id);
           }
         }
 
@@ -2367,7 +2369,7 @@ export class Graphservice {
 
                 this.UserimageSRC = null;
 
-                resolve(true);
+                resolve(null);
 
                 break;
 
@@ -2375,10 +2377,10 @@ export class Graphservice {
 
                 debugger;
 
+                reject(error);
+
                 break;
             }
-
-            reject(error);
           });
         }
         else {

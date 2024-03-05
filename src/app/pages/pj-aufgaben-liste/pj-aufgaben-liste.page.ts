@@ -2063,10 +2063,14 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
     try {
 
+      /*
       this.Auswahlhoehe = 0;
       this.ShowProjektschnellauswahl = true;
       this.Projektschenllauswahltitel       = 'Schnelle Aufgabe - Projektauswahl';
       this.Projektschnellauswahlursprung    = this.Projektschnellauswahlursprungvarianten.Schnelle_Aufgabe;
+       */
+
+      this.Tools.SetRootPage(this.Const.Pages.PjSchnellaufgabenListePage);
 
     } catch (error) {
 
@@ -2379,7 +2383,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
       this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Schnellaufgabenliste;
 
-      this.Tools.PushPage(this.Const.Pages.PjSchnellaufgabenListePage);
+      this.Tools.SetRootPage(this.Const.Pages.PjSchnellaufgabenListePage);
 
     } catch (error) {
 

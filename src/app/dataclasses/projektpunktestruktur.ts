@@ -45,6 +45,7 @@ export type Projektpunktestruktur = {
   Thumbnailsize:       string;
   LiveEditor:          boolean;
   Meilenstein:         boolean;
+  Schnellaufgabe:      boolean;
   Meilensteinstatus:   string;
   BemerkungMouseOver:  boolean;
   EndeMouseOver:       boolean;

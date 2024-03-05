@@ -7,6 +7,23 @@
           <table>
             <tr>
               <td style="width: 10px"></td>
+              <td>
+                <div class="menubuttonclass"
+                     (mouseenter)="HomeMouseOver = true"
+                     (mouseleave)="HomeMouseOver = false"
+                     (click)="HomeButtonClicked()">
+                  <table class="paddingsmalltable">
+                    <tr>
+                      <td>
+                        <ion-icon name="home-outline"
+                                  [color]="HomeMouseOver ? Basics.Ionicfarben.Schwarz : Basics.Ionicfarben.Weiss">
+                        </ion-icon>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 6px;"></td>
               <td style="height: 52px; font-size: 120%; font-weight: bold;" valign="middle">
                 Schenllaufgaben
               </td>
@@ -24,182 +41,154 @@
 </ion-header>
 <ion-content>
 
+  <div [style.width.px]="Contentbreite" [style.height.px]="Contenthoehe" class="contentdivclass">
+
+    <ng-container *ngFor="let zi of [].constructor(Zeilenanzahl); let Zeilenindex = index">
+      <ng-container *ngFor="let si of [].constructor(Spaltenanzahl); let Spaltenindex = index" [style.width.%]="100 /Spaltenanzahl">
+        <div  *ngIf="CheckProjekt(Zeilenindex, Spaltenindex)" style="padding: 4px;" [style.width.px]="(Contentbreite / 2) - 8">
+          <div style="border: 2px solid gray; border-radius: 8px; padding: 4px; width: 100%; height: 100%">
+            <table style="width: 100%">
+              <tr>
+                <td>
+
+                  <table class="nobordertable" style="width: 100%">
+                    <tr>
+                      <td style="width: 40px;">
+                        <div class="projecticonclass" [style.background]="DBProjekte.GetProjektfarbeByProjekt(Projekteliste[Zeilenindex][Spaltenindex])"></div>
+                      </td>
+                      <td style="width: auto;">
+                        <ion-text color="baeblau" style="font-size: 120%"><b>{{GetProjektname(Zeilenindex, Spaltenindex)}}</b></ion-text>
+                      </td>
+                      <td style="width: 60px;">
+                        <ion-button size="small" color="grau" (click)="AddAufgabeClicked(Projekteliste[Zeilenindex][Spaltenindex], Zeilenindex, Spaltenindex)">
+                          <ion-icon name="add-circle-outline"></ion-icon>
+                        </ion-button>
+                      </td>
+                    </tr>
+                  </table>
+
+
+                </td>
+              </tr>
+              <ng-container *ngIf="Schnellaufgabenliste[Projekteliste[Zeilenindex][Spaltenindex].Projektkey].length > 0">
+                <tr>
+                  <td style="height: 12px;" valign="middle">
+                    <div style="width: 100%; height: 2px; background: gray;"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table border="1" style="width: 100%" class="paddingsmalltable">
+                      <tr *ngFor="let Eintrag of Schnellaufgabenliste[Projekteliste[Zeilenindex][Spaltenindex].Projektkey]">
+                        <td style="width: 60px; text-align: center">{{GetDatum(Eintrag.Startzeitsptempel)}}</td>
+                        <td style="width: 40px; text-align: center">{{GetUhrzeit(Eintrag.Startzeitsptempel)}}</td>
+                        <td style="width: auto">
+                          <div class="aufgabedivclass" [innerHTML]="Eintrag.Aufgabe | safe: 'html'"></div>
+                        </td>
+                        <td style="width: 40px;">
+                          <div class="statusdivclass" [style.background]="DBProjektpunkte.GetStatuscolor(Eintrag)">
+                            <checkbox-clon [Checked]="Eintrag.Status === Const.Projektpunktstatustypen.Geschlossen.Name" (CheckChanged)="StatusCheckChanged($event, Eintrag)"></checkbox-clon>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+
+  </div>
+
+
+  <!--
+
   <table *ngIf="Projekteliste.length > 0" style="width: 100%" class="paddingtable">
     <tr *ngFor="let zi of [].constructor(Zeilenanzahl); let Zeilenindex = index">
       <td *ngFor="let si of [].constructor(Spaltenanzahl); let Spaltenindex = index" [style.width.%]="100 /Spaltenanzahl">
 
         <ng-container *ngIf="CheckProjekt(Zeilenindex, Spaltenindex)">
 
-          <table class="nobordertable">
-            <tr>
-              <td>
-                <div class="projecticonclass" [style.background]="DBProjekte.GetProjektfarbeByProjekt(Projekteliste[Zeilenindex][Spaltenindex])"></div>
-              </td>
-              <td>
-                <ion-text color="baeblau" style="font-size: 120%"><b>{{GetProjektname(Zeilenindex, Spaltenindex)}}</b></ion-text>
-              </td>
-              <td><ion-icon name="add-circle-outline"></ion-icon></td>
-            </tr>
-          </table>
+          <div style="border: 2px solid gray; border-radius: 8px; padding: 4px; width: 100%">
+
+            <table style="width: 100%">
+              <tr>
+                <td>
+
+                    <table class="nobordertable" style="width: 100%">
+                      <tr>
+                        <td style="width: 40px;">
+                          <div class="projecticonclass" [style.background]="DBProjekte.GetProjektfarbeByProjekt(Projekteliste[Zeilenindex][Spaltenindex])"></div>
+                        </td>
+                        <td style="width: auto;">
+                          <ion-text color="baeblau" style="font-size: 120%"><b>{{GetProjektname(Zeilenindex, Spaltenindex)}}</b></ion-text>
+                        </td>
+                        <td style="width: 60px;">
+                          <ion-button size="small" color="grau" (click)="AddAufgabeClicked(Projekteliste[Zeilenindex][Spaltenindex], Zeilenindex, Spaltenindex)">
+                            <ion-icon name="add-circle-outline"></ion-icon>
+                          </ion-button>
+                        </td>
+                      </tr>
+                    </table>
+
+
+                </td>
+              </tr>
+              <ng-container *ngIf="Schnellaufgabenliste[Projekteliste[Zeilenindex][Spaltenindex].Projektkey].length > 0">
+                <tr>
+                  <td>
+                    <div style="width: 100%; height: 2px; background: gray;"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table border="1" style="width: 100%">
+                      <tr *ngFor="let Eintrag of Schnellaufgabenliste[Projekteliste[Zeilenindex][Spaltenindex].Projektkey]">
+                        <td style="width: 70px;">{{GetDatum(Eintrag.Startzeitsptempel)}}</td>
+                        <td style="width: 60px;">{{GetUhrzeit(Eintrag.Startzeitsptempel)}}</td>
+                        <td style="width: auto" [innerHTML]="Eintrag.Aufgabe | safe: 'html'"></td>
+                        <td style="width: 40px;">
+                          <div class="statusdivclass" [style.background]="DBProjektpunkte.GetStatuscolor(Eintrag)">
+                            <checkbox-clon [Checked]="Eintrag.Status === Const.Projektpunktstatustypen.Geschlossen.Name" (CheckChanged)="StatusCheckChanged($event, Eintrag)"></checkbox-clon>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </ng-container>
+            </table>
+
+          </div>
 
         </ng-container>
 
       </td>
     </tr>
   </table>
+  -->
 
 </ion-content>
 <ion-footer>
   <page-footer #PageFooter>
 
-    <table width="100%">
-      <tr>
-        <td align="left">
-          <div class="datumkeeperclass">{{GetDatum()}}</div>
-        </td>
-        <td style="width: 50px" align="right"></td>
-        <td><ion-button (click)="TestButtonClicked($event)">Test</ion-button></td>
-      </tr>
-    </table>
 
   </page-footer>
 </ion-footer>
 
-<pj-aufgaben-listefilter *ngIf="ShowZeitspannefilter"
-                         [Titel]="'Zeitspanne festlegen'"
-                         [Dialogbreite]="700"
-                         [Dialoghoehe]="340"
-                         [PositionY]="DialogPosY + 200"
-                         [ZIndex]="4000" (CancelClickedEvent)="ShowZeitspannefilter = false"
-                         (OkClickedEvent)="ShowZeitspannefilter = false">
-</pj-aufgaben-listefilter>
-
-<!--
-
-<pj-projektpunkt-editor *ngIf="ShowProjektpunktEditor" [Dialogbreite]="Dialogbreite" [Dialoghoehe]="Dialoghoehe" [PositionY]="0"
-                        [ZIndex]="3000" [Titel]="GetProjektpunkteditorTitel()" Iconname="book-outline"
-                        (FachbereichClicked)="FachbereichClickedHandler()"
-                        (KostengruppeClicked)="KostengruppeClickedHandler($event)"
-                        (GebaeudeteilClicked)="GebaeudeteilClickedHandler()"
-                        (LeistungsphaseClickedEvent)="LeistungsphaseClickedHandler()"
-                        (TerminButtonClicked)="ShowDateKkPicker = true"
-                        (CancelClickedEvent)="ShowProjektpunktEditor = false"
-                        (VerfasserButtonClicked)="VerfasserButtonClickedHandler()"
-                        (AnerkungVerfassernClicked)="AnerkungVerfasserClickedHandler($event)"
-                        (OkClickedEvent)="ShowProjektpunktEditor = false"></pj-projektpunkt-editor>
--->
-
-<pj-kostengruppen-festlegungskategorie-auswahl *ngIf="ShowKostengruppenauswahlFestlegungskategorie" [Titel]="Kostengruppeauswahltitel"
-                                               [Dialogbreite]="KostenDialogbreite" [Dialoghoehe]="KostenDialoghoehe" [PositionY]="DialogPosY"
-                                               (OkClickedEvent)="ShowKostengruppenauswahlFestlegungskategorie = false"
-                                               (CancelClickedEvent)="ShowKostengruppenauswahlFestlegungskategorie = false"></pj-kostengruppen-festlegungskategorie-auswahl>
+<pj-schnellaufgabe-editor *ngIf="ShowEditor"
+                          [Dialogbreite]="1000"
+                          [Dialoghoehe]="540"
+                          [ZIndex]="3000"
+                          [PositionY]="200"
+                          (CancelClickedEvent)="ShowEditor = false" (OkClickedEvent)="ShowEditor = false">
+</pj-schnellaufgabe-editor>
 
 
-<!--
-<fi-mitarbeiter-auswahl *ngIf="ShowMitarbeiterauswahl"
-                        [Titel]="'Zuständige Kollegen festlegen'"
-                        [Dialogbreite]="600" [ZIndex]="4000"
-                        [Multiselect]="true"
-                        Iconname="people-outline"
-                        [AuswahlIDliste]="AuswahlIDliste"
-                        (CancelClickedEvent)="ShowMitarbeiterauswahl = false"
-                        (OkClickedEvent)="MitarbeiterauswahlOkButtonClicked($event)"
-                        (StandortfilterClickedEvent)="MitarebiterStandortfilterClickedHandler()"></fi-mitarbeiter-auswahl>
-
-<pj-firmen-auswahl *ngIf="ShowBeteiligteauswahl"
-                        [Titel]="GetBeteiligtenauswahlTitel()"
-                        [Dialogbreite]="600" [ZIndex]="4000"
-                        [Multiselect]="true"
-                        Iconname="people-outline"
-                        [AuswahlIDliste]="AuswahlIDliste"
-                        (CancelClickedEvent)="ShowBeteiligteauswahl = false"
-                        (OkClickedEvent)="BeteiligteauswahlOkButtonClicked($event)"></pj-firmen-auswahl>
-
-<projektpunkt-statusdate-picker *ngIf="ShowDateStatusPicker" [Dialogbreite]="600"
-                                [Dialoghoehe]="Dialoghoehe - 200"
-                                [PositionY]="DialogPosY + 100"
-                                [ZIndex]="4000"
-                                [Iconname]="'calendar-outline'"
-                                [Titel]="'Termin und Status festlegen'"
-                                [ShowProtokollpunkte]="false"
-                                [Datum]="Datum"
-                                [Status]="DBProjektpunkte.CurrentProjektpunkt.Status"
-                                (OkClickedEvent)="ShowDateStatusPicker = false"
-                                (CancelClickedEvent)="ShowDateStatusPicker = false">
-</projektpunkt-statusdate-picker>
-
-<projektpunkt-date-kw-picker *ngIf="ShowDateKkPicker" [Dialogbreite]="380"
-                             [Dialoghoehe]="520"
-                             [PositionY]="DialogPosY + 200"
-                             [ZIndex]="5000"
-                             [Iconname]="'calendar-outline'"
-                             [Titel]="'Termin oder KW festlegen'"
-                             (OkClickedEvent)="ShowDateKkPicker = false"
-                             (CancelClickedEvent)="ShowDateKkPicker = false">
-</projektpunkt-date-kw-picker>
-
-<pj-projekte-schnellauswahl *ngIf="ShowProjektschnellauswahl"
-                            [ZIndex]="5000"
-                            [Dialogbreite]="800"
-                            [Dialoghoehe]="Auswahlhoehe"
-                            [Titel]="Projektschenllauswahltitel" [Iconname]="'star-outline'"
-                            (ProjektClickedEvent)="ProjektSchnellauswahlProjektClickedEventHandler($event)"
-                            (CancelClickedEvent)="ShowProjektschnellauswahl = false"
-                            (OkClickedEvent)="ShowProjektschnellauswahl = false">
-</pj-projekte-schnellauswahl>
-
-<pj-meinewoche-editor *ngIf="ShowMeinewocheEditor"
-                      [ZIndex]="5000"
-                      [Dialogbreite]="Basics.Contentbreite - 40"
-                      [Dialoghoehe]="900"
-                      [PositionY]="160" [Titel]="'Wochentage auswählen'" [Iconname]="'calendar-outline'"
-                      (OkClickedEvent)="ShowMeinewocheEditor = false"
-                      (CancelClickedEvent)="ShowMeinewocheEditor = false">
-</pj-meinewoche-editor>
-
-<auswahl-dialog *ngIf="ShowAuswahl" [Auswahlliste]="Auswahlliste" [Auswahlindex]="Auswahlindex" [ZIndex]="5000"
-                [Dialogbreite]="Auswahlbreite" [PositionY]="100"
-                [Titel]="Auswahltitel" [Iconname]="GetDialogTitelicon()"
-                (OkClickedEvent)="AuswahlOkButtonClicked($event)"
-                (CancelClickedEvent)="ShowAuswahl = false">
-</auswahl-dialog>
-
-<pj-protokoll-editor *ngIf="ShowProtokollEditor"  [Dialogbreite]="Dialogbreite" [Dialoghoehe]="Dialoghoehe" [PositionY]="0"
-                     [Titel]="'Protokoll bearbeiten'" Iconname="book-outline"
-                     [ZIndex]="2000"
-                     (OkClickedEvent)="ShowProtokollEditor = false"
-                     (CancelClickedEvent)="ShowProtokollEditor = false"
-                     (TeamteilnehmerClicked)="TeamteilnehmerClickedHandler()"
-                     (BeteiligteteilnehmerClicked)="BeteiligteteilnehmerClickedHandler()"
-                     (ProtokollpunktClicked)="ProtokollpunktClickedHandler($event)"
-                     (AddProtokollpunktClicked)="AddProtokollpunktClickedHandler()">
-</pj-protokoll-editor>
-
-<pj-baustelle-lopliste-editor *ngIf="ShowLOPListeEditor" [Dialogbreite]="Dialogbreite" [PositionY]="0"
-                              [Titel]="'LOP Liste bearbeiten'" Iconname="book-outline"
-                              [ZIndex]="2000"
-                              (OkClickedEvent)="ShowLOPListeEditor = false"
-                              (CancelClickedEvent)="ShowLOPListeEditor = false"
-                              (TeamteilnehmerClicked)="TeamteilnehmerClickedHandler()"
-                              (BeteiligteteilnehmerClicked)="BeteiligteteilnehmerClickedHandler()"
-                              (LOPListepunktClicked)="LOPListepunktClickedHandler($event)"
-                              (AddLOPListepunktClicked)="AddLOPListepunktClickedHandler()">
-</pj-baustelle-lopliste-editor>
-
-<pj-email-send *ngIf="ShowEmailSenden"
-               [Titel]="'LOP Liste senden'"
-               [Dialogbreite]="EmailDialogbreite"
-               [PositionY]="DialogPosY"
-               [ZIndex]="1000"
-               [SendAttachment]="false"
-               [ShowEmpfaengerBAE]="false"
-               [ShowCcEmpfaengerExtern]="false"
-               Iconname="mail-outline"
-               (CcEmpfaengerInternClicked)="EmailCcEmpfaengerInternClickedHandler()"
-               (EmpfaengerExternClicked)="EmailEmpfaengerExternClickedHandler()"
-               (CancelClickedEvent)="ShowEmailSenden = false"
-               (OkClickedEvent)="EmailSendenOkButtonClicked($event)"></pj-email-send>
--->
 
 
 

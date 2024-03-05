@@ -44,6 +44,7 @@ import {JSX} from "ionicons";
 export class DatabaseProjektpunkteService {
 
   public CurrentProjektpunkt: Projektpunktestruktur;
+  public CurrentSchenllaufgabe: Projektpunktestruktur;
   public CurrentProjektpunkteliste: Projektpunktestruktur[];
   public Statustypenliste: Projektpunktstatustypenstruktur[];
   private ServerProjektpunkteUrl: string;
@@ -74,6 +75,7 @@ export class DatabaseProjektpunkteService {
     try {
 
       this.CurrentProjektpunkt       = null;
+      this.CurrentSchenllaufgabe     = null;
       this.Statustypenliste          = [];
       this.ServerProjektpunkteUrl    = this.Pool.CockpitserverURL + '/projektpunkte';
       this.ServerSendReminderUrl     = this.Pool.CockpitserverURL + '/sendreminder';
@@ -404,6 +406,34 @@ export class DatabaseProjektpunkteService {
     }
   }
 
+  DeleteSchnellaufgabe(schnellaufgabe: Projektpunktestruktur): Promise<any> {
+
+    try {
+
+      return new Promise((resolve, reject) => {
+
+        this.UpdateSchenllaufgabe(schnellaufgabe, true).then(() => {
+
+          this.Pool.Projektschnellaufgabenliste[schnellaufgabe.Projektkey] = lodash.filter(this.Pool.Projektschnellaufgabenliste[schnellaufgabe.Projektkey], (eintrag: Projektpunktestruktur) => {
+
+            return eintrag._id !== schnellaufgabe._id
+          });
+
+          this.Pool.SchnellaufgabenlisteChanged.emit();
+
+          resolve(true);
+
+        }).catch((errora: HttpErrorResponse) => {
+
+          reject(errora);
+        });
+      });
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Database Projektpunkte', 'DeleteSchnellaufgabe', this.Debug.Typen.Service);
+    }
+  }
+
   RemoveProjektpunkteliste(punkteliste: Projektpunktestruktur[]): Promise<any> {
 
     try {
@@ -491,6 +521,48 @@ export class DatabaseProjektpunkteService {
     }
   }
 
+  public AddSchenllaufgabe(projektpunkt: Projektpunktestruktur) {
+
+    try {
+
+      let Observer: Observable<any>;
+
+      return new Promise((resolve, reject) => {
+
+        // POST für neuen Eintrag
+
+        Observer = this.http.post(this.ServerProjektpunkteUrl, projektpunkt);
+
+        Observer.subscribe({
+
+          next: (result) => {
+
+            this.CurrentSchenllaufgabe = result.Projektpunkt;
+          },
+          complete: () => {
+
+            this.UpdateSchenllaufgabenliste(this.CurrentSchenllaufgabe);
+
+            this.Pool.SchnellaufgabenlisteChanged.emit();
+
+            resolve(this.CurrentSchenllaufgabe);
+          },
+          error: (error: HttpErrorResponse) => {
+
+            debugger;
+
+            reject(error);
+          }
+        });
+
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Database Projektpunkte', 'AddSchenllaufgabe', this.Debug.Typen.Service);
+    }
+  }
+
   UpdateProjektpunkt(punkt: Projektpunktestruktur, emitevent: boolean): Promise<any> {
 
     try {
@@ -559,6 +631,65 @@ export class DatabaseProjektpunkteService {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Database Projektpunkte', 'UpdateProjektpunkt', this.Debug.Typen.Service);
+    }
+  }
+
+  UpdateSchenllaufgabe(schnellaufgabe: Projektpunktestruktur, dodelete: boolean): Promise<any> {
+
+    try {
+
+      let Observer: Observable<any>;
+      let Merker: Projektpunktestruktur;
+      let IDListe: string[] = [];
+
+      return new Promise((resolve, reject) => {
+
+        // PUT für update
+
+        delete schnellaufgabe.__v;
+
+        if(dodelete) IDListe = [schnellaufgabe._id];
+
+        Observer = this.http.put(this.ServerProjektpunkteUrl, {Projektpunkt: schnellaufgabe, Delete: dodelete, IDListe: JSON.stringify(IDListe)});
+
+        Observer.subscribe({
+
+          next: (ne) => {
+
+            Merker = ne.Projektpunkt;
+
+          },
+          complete: () => {
+
+            if(Merker !== null) {
+
+              if(dodelete === false) {
+
+                this.CurrentSchenllaufgabe = Merker;
+
+                this.UpdateSchenllaufgabenliste(this.CurrentSchenllaufgabe);
+
+                this.Pool.SchnellaufgabenlisteChanged.emit();
+              }
+
+              resolve(true);
+            }
+            else {
+
+              reject(new Error('Schnellaufgabe auf Server nicht gefunden.'));
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+
+            debugger;
+
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Database Projektpunkte', 'UpdateSchenllaufgabe', this.Debug.Typen.Service);
     }
   }
 
@@ -637,7 +768,7 @@ export class DatabaseProjektpunkteService {
 
         _id:              null,
         ProjektID:       Projekt !== null ? Projekt._id : null,
-        Projektkey:      this.DBProjekt.CurrentProjekt.Projektkey,
+        Projektkey:      Projekt.Projektkey,
         ProjektleiterID: this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten._id : null,
         ProtokollID:     null,
         LOPListeID:      null,
@@ -650,7 +781,7 @@ export class DatabaseProjektpunkteService {
         NotizenID:       null,
         Matrixanwendung:  false,
         FestlegungskategorieID: null,
-        Leistungsphase:  this.DBProjekt.CurrentProjekt.Leistungsphase,
+        Leistungsphase:  Projekt.Leistungsphase,
         Nummer:          Nummer.toString(),
         Listenposition:  Nummer,
         OutlookkatgorieID: this.Const.NONE,
@@ -664,6 +795,7 @@ export class DatabaseProjektpunkteService {
         EndeKalenderwoche: null,
         Startzeitsptempel: Startzeitstempel,
         Startzeitstring:   Startzeitpunkt,
+        Schnellaufgabe:    false,
         Geschlossenzeitstempel: null,
         Geschlossenzeitstring: null,
         FileDownloadURL:   this.Const.NONE,
@@ -711,7 +843,6 @@ export class DatabaseProjektpunkteService {
       };
 
       return Punkt;
-
     }
     catch (error) {
 
@@ -755,6 +886,7 @@ export class DatabaseProjektpunkteService {
         Leistungsphase:  Leistungsphase.toString(),
         Nummer:          null,
         Listenposition:  null,
+        Schnellaufgabe: false,
         Thumbnailsize:   'small',
         OutlookkatgorieID: this.Const.NONE,
         Aufgabe:         "", // "Testeintrag " + moment().format('HH:mm:ss'),
@@ -831,10 +963,6 @@ export class DatabaseProjektpunkteService {
       let Name: string  = this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten.Name    : '';
       let Email: string = this.Pool.Mitarbeiterdaten   !== null ? this.Pool.Mitarbeiterdaten.Email   : '';
 
-
-
-
-
       let Punkt: Projektpunktestruktur = {
 
         _id:              null,
@@ -852,6 +980,7 @@ export class DatabaseProjektpunkteService {
         EmailID:         null,
         Prioritaet:      null,
         Thumbnailsize:   'small',
+        Schnellaufgabe: false,
         NotizenID:       null,
         OutlookkatgorieID: this.Const.NONE,
         Leistungsphase:  this.DBProjekt.CurrentProjekt !== null ? this.DBProjekt.CurrentProjekt.Leistungsphase : 'unbekannt',
@@ -956,6 +1085,7 @@ export class DatabaseProjektpunkteService {
         AufgabenbereichID: null,
         AufgabenteilbereichID: null,
         Matrixanwendung: false,
+        Schnellaufgabe: false,
         EmailID:         null,
         Thumbnailsize:   'small',
         Prioritaet:      this.Const.NONE,
@@ -1268,8 +1398,6 @@ export class DatabaseProjektpunkteService {
       let Tag: Moment;
       let Liste: Projektpunktestruktur[];
 
-
-
       if(lopliste !== null) Tag  = MyMoment(lopliste.Zeitstempel);
       else                   Tag = MyMoment();
 
@@ -1302,6 +1430,7 @@ export class DatabaseProjektpunkteService {
         AufgabenbereichID: null,
         AufgabenteilbereichID: null,
         ProtokollShowBilder: true,
+        Schnellaufgabe: false,
         Prioritaet:      this.Const.Projektpunktprioritaetstypen.Niedrig.Name,
         NotizenID:       null,
         EmailID:         null,
@@ -1634,6 +1763,40 @@ export class DatabaseProjektpunkteService {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Projektpunkte', 'UpdateProjektpunkteliste', this.Debug.Typen.Service);
+    }
+  }
+
+  private UpdateSchenllaufgabenliste(Schnellaufgabe: Projektpunktestruktur) {
+
+    try {
+
+      let Index: number;
+
+      Index = lodash.findIndex(this.Pool.Projektschnellaufgabenliste[Schnellaufgabe.Projektkey], {_id : Schnellaufgabe._id});
+
+      if(Index !== -1) {
+
+        this.Pool.Projektschnellaufgabenliste[Schnellaufgabe.Projektkey][Index] = Schnellaufgabe; // aktualisieren
+
+        this.Debug.ShowMessage('Schenllaufgabe updated: "' + Schnellaufgabe.Aufgabe + '"', 'Projektpunkte', 'UpdateProjektpunkteliste', this.Debug.Typen.Service);
+      }
+      else {
+
+        this.Debug.ShowMessage('Schenllaufgabe nicht gefunden -> neue Schenllaufgabe hinzufügen', 'Projektpunkte', 'UpdateProjektpunkteliste', this.Debug.Typen.Service);
+
+        if(lodash.isUndefined(Schnellaufgabe.LiveEditor)) {
+
+          Schnellaufgabe.LiveEditor = false;
+        }
+
+        this.Pool.Projektschnellaufgabenliste[Schnellaufgabe.Projektkey].push(Schnellaufgabe); // neuen
+      }
+
+      debugger;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Projektpunkte', 'UpdateSchenllaufgabenliste', this.Debug.Typen.Service);
     }
   }
 
