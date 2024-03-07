@@ -1152,20 +1152,31 @@ export class PjBaustelleLoplistePage implements OnInit, OnDestroy {
 
       this.Auswahldialogorigin = this.Auswahlservice.Auswahloriginvarianten.LOPListe;
 
-      this.Auswahlliste.push({Index:  0, FirstColumn:  '1', SecoundColumn: '', Data:  1});
-      this.Auswahlliste.push({Index:  1, FirstColumn:  '2', SecoundColumn: '', Data:  2});
-      this.Auswahlliste.push({Index:  2, FirstColumn:  '3', SecoundColumn: '', Data:  3});
-      this.Auswahlliste.push({Index:  3, FirstColumn:  '4', SecoundColumn: '', Data:  4});
-      this.Auswahlliste.push({Index:  4, FirstColumn:  '5', SecoundColumn: '', Data:  5});
-      this.Auswahlliste.push({Index:  5, FirstColumn:  '6', SecoundColumn: '', Data:  6});
-      this.Auswahlliste.push({Index:  6, FirstColumn:  '7', SecoundColumn: '', Data:  7});
-      this.Auswahlliste.push({Index:  7, FirstColumn:  '8', SecoundColumn: '', Data:  8});
-      this.Auswahlliste.push({Index:  8, FirstColumn:  '9', SecoundColumn: '', Data:  9});
-      this.Auswahlliste.push({Index:  9, FirstColumn: '10', SecoundColumn: '', Data: 10});
-      this.Auswahlliste.push({Index: 10, FirstColumn: '11', SecoundColumn: '', Data: 11});
-      this.Auswahlliste.push({Index: 11, FirstColumn: '12', SecoundColumn: '', Data: 12});
-      this.Auswahlliste.push({Index: 12, FirstColumn: '13', SecoundColumn: '', Data: 13});
-      this.Auswahlliste.push({Index: 13, FirstColumn: '14', SecoundColumn: '', Data: 14});
+      this.Auswahlliste.push({Index:  0, FirstColumn:  '1',   SecoundColumn: '', Data:  1});
+      this.Auswahlliste.push({Index:  1, FirstColumn:  '2',   SecoundColumn: '', Data:  2});
+      this.Auswahlliste.push({Index:  2, FirstColumn:  '3',   SecoundColumn: '', Data:  3});
+      this.Auswahlliste.push({Index:  3, FirstColumn:  '4',   SecoundColumn: '', Data:  4});
+      this.Auswahlliste.push({Index:  4, FirstColumn:  '5',   SecoundColumn: '', Data:  5});
+      this.Auswahlliste.push({Index:  5, FirstColumn:  '6',   SecoundColumn: '', Data:  6});
+      this.Auswahlliste.push({Index:  6, FirstColumn:  '7',   SecoundColumn: '', Data:  7});
+      this.Auswahlliste.push({Index:  7, FirstColumn:  '8',   SecoundColumn: '', Data:  8});
+      this.Auswahlliste.push({Index:  8, FirstColumn:  '9',   SecoundColumn: '', Data:  9});
+      this.Auswahlliste.push({Index:  9, FirstColumn: '10',   SecoundColumn: '', Data: 10});
+      this.Auswahlliste.push({Index: 10, FirstColumn: '11',   SecoundColumn: '', Data: 11});
+      this.Auswahlliste.push({Index: 11, FirstColumn: '12',   SecoundColumn: '', Data: 12});
+      this.Auswahlliste.push({Index: 12, FirstColumn: '13',   SecoundColumn: '', Data: 13});
+      this.Auswahlliste.push({Index: 13, FirstColumn: '14',   SecoundColumn: '', Data: 14});
+      this.Auswahlliste.push({Index: 14, FirstColumn: '35',   SecoundColumn: '', Data: 35});
+      this.Auswahlliste.push({Index: 15, FirstColumn: '100',  SecoundColumn: '', Data: 100});
+      this.Auswahlliste.push({Index: 16, FirstColumn: '200',  SecoundColumn: '', Data: 200});
+      this.Auswahlliste.push({Index: 17, FirstColumn: '300',  SecoundColumn: '', Data: 300});
+      this.Auswahlliste.push({Index: 18, FirstColumn: '400',  SecoundColumn: '', Data: 400});
+      this.Auswahlliste.push({Index: 19, FirstColumn: '500',  SecoundColumn: '', Data: 500});
+      this.Auswahlliste.push({Index: 20, FirstColumn: '600',  SecoundColumn: '', Data: 600});
+      this.Auswahlliste.push({Index: 21, FirstColumn: '700',  SecoundColumn: '', Data: 700});
+      this.Auswahlliste.push({Index: 22, FirstColumn: '800',  SecoundColumn: '', Data: 800});
+      this.Auswahlliste.push({Index: 23, FirstColumn: '900',  SecoundColumn: '', Data: 900});
+      this.Auswahlliste.push({Index: 24, FirstColumn: '1000', SecoundColumn: '', Data: 1000});
 
       this.Auswahlindex = lodash.findIndex(this.Auswahlliste, {Data: this.Pool.Mitarbeitersettings.LOPListeGeschlossenZeitfilter});
       this.ShowAuswahl = true;
