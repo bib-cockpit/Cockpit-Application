@@ -406,19 +406,6 @@ export class CommonEinstellungenPage implements OnInit, OnDestroy {
 
       this.Signatur = this.Pool.GetFilledSignatur(this.Pool.Mitarbeiterdaten, true);
 
-      /*
-
-      this.Signatur = this.Signatur.replace('[Image]', 'assets/images/group_logo.png');
-
-      if(this.Pool.Mitarbeiterdaten !== null) {
-
-        this.Signatur = this.Signatur.replace('[Name]', this.Pool.Mitarbeiterdaten.Vorname + ' ' + this.Pool.Mitarbeiterdaten.Name);
-        this.Signatur = this.replaceAll(this.Signatur, '[Email]', this.Pool.Mitarbeiterdaten.Email);
-
-      }
-
-       */
-
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'Einstellungen', 'PrepareData', this.Debug.Typen.Page);

@@ -29,6 +29,7 @@ import {Outlookpresetcolorsstruktur} from "../../dataclasses/outlookpresetcolors
 import {Mitarbeiterstruktur} from "../../dataclasses/mitarbeiterstruktur";
 import {Projektfirmenstruktur} from "../../dataclasses/projektfirmenstruktur";
 import {DatabaseProjektfirmenService} from "../../services/database-projektfirmen/database-projektfirmen.service";
+import * as buffer from "buffer";
 
 @Component({
   selector: 'pj-projekt-editor',
@@ -102,7 +103,9 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
   public Listentrennerhoehe: number;
   private MitarbeiterSubscription: Subscription;
   private FirmenSubscription: Subscription;
-
+  public BeteiligteHeaderhoehe: number;
+  public BeteiligteFooterhoehe: number;
+  public BeteiligteContenthoehe: number;
 
   constructor(public Basics: BasicsProvider,
               public Debug: DebugProvider,
@@ -129,7 +132,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.ZIndex              = 2000;
       this.Beteiligtenliste    = [];
       this.Firmenliste         = [];
-      this.Bereich             = this.Bereiche.Allgemein;
+      this.Bereich             = this.Bereiche.Beteiligte;
       this.ShowRaumVerschieber = false;
       this.PositionChanged     = false;
       this.Mitarbeiterliste    = [];
@@ -203,6 +206,10 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.Displayservice.AddDialog(this.Displayservice.Dialognamen.Projekteditor, this.ZIndex);
 
       this.DBGebaeude.Init();
+
+      this.BeteiligteHeaderhoehe  = 50;
+      this.BeteiligteFooterhoehe  = 60;
+      this.BeteiligteContenthoehe = this.Basics.Contenthoehe - 2 * this.PositionY - 90 - this.BeteiligteHeaderhoehe - this.BeteiligteFooterhoehe;
 
       this.SetupValidation();
       this.PrepareData();

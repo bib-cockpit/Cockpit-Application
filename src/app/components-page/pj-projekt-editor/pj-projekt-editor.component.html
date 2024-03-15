@@ -503,169 +503,187 @@
               </table>
             </div>
 
-            <div *ngSwitchCase="Bereiche.Beteiligte" class="contentrightinnerclass">
+
+
+            <ng-container *ngSwitchCase="Bereiche.Beteiligte">
+
+              <div class="beteiligteheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">
+                <div class="beteiligteinnerheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">Projektbeteiligte</div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
+                <div class="beteiligteinnerheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">Mitarbeiter</div>
+              </div>
+
+              <div class="beteiligtecontentdivclass" [style.top.px]="BeteiligteHeaderhoehe" [style.height.px]="BeteiligteContenthoehe">
+
+                <div class="beteiligtecontentinnerdivclass" [style.height.px]="BeteiligteContenthoehe">
+                  <ion-list class="ion-no-padding">
+                    <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Beteiligt of Beteiligtenliste, let i = index" (click)="BeteiligteButtonClicked(Beteiligt)">
+                      <table class="paddingsmalltable" width="100%">
+                        <tr>
+                          <td>
+                            <table class="paddingsmalltable" style="font-size: 90%;">
+                              <tr>
+                                <td colspan="10" style="padding-top: 3px; font-weight: bold;">
+                                  {{Beteiligt.Name}} {{Beteiligt.Vorname}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="10" [style.color]="GetFirmanameByFirmaID(Beteiligt.FirmaID) === 'unbekannt' ? 'red' : 'black'">
+                                  {{GetFirmanameByFirmaID(Beteiligt.FirmaID)}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  {{Beteiligt.Possition}}
+                                </td>
+                                <td style="font-size: 140%">&bull;</td>
+                                <td>{{Beteiligt.Email}}</td>
+                              </tr>
+
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </ion-item>
+                  </ion-list>
+
+                  <table *ngIf="Beteiligtenliste.length === 0" class="paddingtable" width="100%">
+                    <tr>
+                      <td style="height: 60px; text-align: center; vertical-align: center">
+                        keine Einträge vorhanden
+                      </td>
+                    </tr>
+                  </table>
+
+                </div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
+                <div class="beteiligtecontentinnerdivclass" [style.height.px]="BeteiligteContenthoehe">
+
+                  <ion-list class="ion-no-padding">
+                    <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Mitarbeiter of Mitarbeiterliste, let i = index" (click)="MitarbeiterButtonClcicked(Mitarbeiter)">
+                      <table class="paddingsmalltable" width="100%">
+                        <tr>
+                          <td>
+                            <table>
+                              <tr>
+                                <td style="padding-top: 3px; font-size: 90%">{{Mitarbeiter.Name}} {{Mitarbeiter.Vorname}}</td>
+                                <td>/</td>
+                                <td style="font-size: 90%; color: gray;">{{DBStandort.GetStandort(Mitarbeiter.StandortID)}}</td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="height: 3px"></td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <table class="infotable" style="white-space:nowrap;">
+                              <tr>
+                                <td>{{Mitarbeiter.Email}}</td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="height: 4px"></td>
+                        </tr>
+                      </table>
+                    </ion-item>
+
+                  </ion-list>
+
+                  <table *ngIf="Mitarbeiterliste.length === 0" class="paddingtable" width="100%">
+                    <tr>
+                      <td style="height: 60px; text-align: center; vertical-align: center">
+                        keine Einträge vorhanden
+                      </td>
+                    </tr>
+                  </table>
+
+
+                </div>
+
+
+
+              </div>
+
+              <div class="beteiligtefooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+                <div class="beteiligteinnerfooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+
+                  <table class="paddingtable">
+                    <tr>
+                      <td>
+                        <div class="importoutlookbutton" (click)="AddBeteiligteButtonClicked()">
+                          <table class="paddingtable">
+                            <tr>
+                              <td><ion-icon name="add-circle-outline" color="weiss"></ion-icon></td>
+                              <td style="color: white; font-size: 100%">NEUER EINTRAG</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td>
+                      <td style="width: 4px"></td>
+                      <td>
+                        <div class="importoutlookbutton" (click)="ImportOutlookKontakteEvent.emit()">
+                          <table class="paddingtable">
+                            <tr>
+                              <td><img src="assets/svgs/outlookicon.svg" style="width: 60px"></td>
+                              <td style="color: white; font-size: 100%">OUTLOOK KONTAKTE IMPORTIEREN</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+
+                </div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
+
+                <div class="beteiligteinnerfooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+
+                  <table class="paddingtable">
+                    <tr>
+                      <td>
+                        <div class="importoutlookbutton" (click)="EditMitarbeiterEvent.emit()">
+                          <table class="paddingtable">
+                            <tr>
+                              <td><ion-icon name="book" color="weiss"></ion-icon></td>
+                              <td style="color: white; font-size: 100%">Mitarbeiterauswahl</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                </div>
+
+              </div>
+
+
+
             <!-- Projektbeteiligtenliste -->
+              <!--
                 <table  *ngIf="DB.CurrentProjekt" style="width: 100%">
                   <tr>
-                    <td style="height: 42px; font-size: 120%; font-weight: bold"><b>Projektbeteiligte</b></td>
-                    <td rowspan="4">
-                      <div style="padding-right: 8px; padding-left: 8px;">
-                        <div [style.height.px]="Listentrennerhoehe" style=" width: 3px; background: #2190df;"></div>
-                      </div>
-                    </td>
-                    <td style="height: 42px; font-size: 120%;"><b>Mitarbeiter</b></td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"><div style="height: 3px; width: 100%; background: #2190df"></div></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 50%" valign="top">
-                      <ion-list class="ion-no-padding">
-                        <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Beteiligt of Beteiligtenliste, let i = index" (click)="BeteiligteButtonClicked(Beteiligt)">
-                          <table class="paddingsmalltable" width="100%">
-                            <tr>
-                              <td>
-                                <table class="paddingsmalltable" style="font-size: 90%;">
-                                  <tr>
-                                    <td colspan="10" style="padding-top: 3px; font-weight: bold;">
-                                        {{Beteiligt.Name}} {{Beteiligt.Vorname}}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td colspan="10" [style.color]="GetFirmanameByFirmaID(Beteiligt.FirmaID) === 'unbekannt' ? 'red' : 'black'">
-                                      {{GetFirmanameByFirmaID(Beteiligt.FirmaID)}}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      {{Beteiligt.Possition}}
-                                    </td>
-                                    <td style="font-size: 140%">&bull;</td>
-                                    <td>{{Beteiligt.Email}}</td>
-                                  </tr>
-
-                                </table>
-                              </td>
-                            </tr>
-                          </table>
-                        </ion-item>
-
-                      </ion-list>
-
-                      <table *ngIf="Beteiligtenliste.length === 0" class="paddingtable" width="100%">
-                        <tr>
-                          <td style="height: 60px; text-align: center; vertical-align: center">
-                            keine Einträge vorhanden
-                          </td>
-                        </tr>
-                      </table>
-
-                    </td>
-                    <!--
-                    <td style="width: 3px; background: red;"></td>
-                    -->
                     <td style="width: 50%" valign="top">
 
-                      <ion-list class="ion-no-padding">
-                        <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Mitarbeiter of Mitarbeiterliste, let i = index" (click)="MitarbeiterButtonClcicked(Mitarbeiter)">
-                          <table class="paddingsmalltable" width="100%">
-                            <tr>
-                              <td>
-                                <table>
-                                  <tr>
-                                    <td style="padding-top: 3px; font-size: 90%">{{Mitarbeiter.Name}} {{Mitarbeiter.Vorname}}</td>
-                                    <td>/</td>
-                                    <td style="font-size: 90%; color: gray;">{{DBStandort.GetStandort(Mitarbeiter.StandortID)}}</td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="height: 3px"></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <table class="infotable" style="white-space:nowrap;">
-                                  <tr>
-                                      <td>{{Mitarbeiter.Email}}</td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="height: 4px"></td>
-                            </tr>
-                          </table>
-                        </ion-item>
 
-                      </ion-list>
-
-                      <table *ngIf="Mitarbeiterliste.length === 0" class="paddingtable" width="100%">
-                        <tr>
-                          <td style="height: 60px; text-align: center; vertical-align: center">
-                            keine Einträge vorhanden
-                          </td>
-                        </tr>
-                      </table>
 
                     </td>
-                  </tr>
-                  <tr style="height: 40px">
-                    <td>
+                    <td style="width: 50%" valign="top">
 
-                      <table class="paddingtable">
-                        <tr>
-                          <td>
-                            <div class="importoutlookbutton" (click)="AddBeteiligteButtonClicked()">
-                              <table class="paddingtable">
-                                <tr>
-                                  <td><ion-icon name="add-circle-outline" color="weiss"></ion-icon></td>
-                                  <td style="color: white; font-size: 100%">NEUER EINTRAG</td>
-                                </tr>
-                              </table>
-                            </div>
-                          </td>
-                          <td style="width: 4px"></td>
-                          <td>
-                            <div class="importoutlookbutton" (click)="ImportOutlookKontakteEvent.emit()">
-                              <table class="paddingtable">
-                                <tr>
-                                  <td><img src="assets/svgs/outlookicon.svg" style="width: 60px"></td>
-                                  <td style="color: white; font-size: 100%">OUTLOOK KONTAKTE IMPORTIEREN</td>
-                                </tr>
-                              </table>
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
 
-                    </td>
-                    <!--
-                    <td></td>
-                    -->
-                    <td>
-
-                      <table class="paddingtable">
-                        <tr>
-                          <td>
-                            <div class="importoutlookbutton" (click)="EditMitarbeiterEvent.emit()">
-                              <table class="paddingtable">
-                                <tr>
-                                  <td><ion-icon name="book" color="weiss"></ion-icon></td>
-                                  <td style="color: white; font-size: 100%">Mitarbeiterauswahl</td>
-                                </tr>
-                              </table>
-                            </div>
-                          </td>
-                        </tr>
-
-                      </table>
 
                     </td>
                   </tr>
                 </table>
 
-          </div>
+              -->
+
+          </ng-container>
 
             <ng-container *ngSwitchCase="Bereiche.Gebaeudestruktur">
               <div *ngIf="DB.CurrentProjekt !== null" class="strukturkeeperdiv">
