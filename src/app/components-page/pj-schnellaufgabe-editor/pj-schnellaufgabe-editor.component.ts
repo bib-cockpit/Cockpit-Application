@@ -112,7 +112,7 @@ export class PjSchnellaufgabeEditorComponent implements OnInit, OnDestroy, After
         browser_spellcheck: true,
         newline_behavior: 'linebreak',
         height: 300,
-        base_url: '/tinymce',
+        base_url: 'tinymce',
         suffix: '.min',
         auto_focus : true,
         content_style: '',

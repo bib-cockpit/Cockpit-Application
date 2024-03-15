@@ -948,8 +948,6 @@ export class DatabaseProtokolleService {
       let Liste:string[] = [];
       let Eintrag: string;
 
-      debugger;
-
       for(let id of this.CurrentProtokoll.BeteiligtInternIDListe) {
 
         Teammitglied = <Mitarbeiterstruktur>lodash.find(this.Pool.Mitarbeiterliste, {_id: id});
@@ -1067,8 +1065,6 @@ export class DatabaseProtokolleService {
 
       this.CurrentProtokoll.Empfaengerliste   = Empfaengerliste;
       this.CurrentProtokoll.CcEmpfaengerliste = CcEmpfaengerliste;
-
-      debugger;
 
     } catch (error) {
 

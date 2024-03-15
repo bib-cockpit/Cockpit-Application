@@ -44,7 +44,6 @@ import {Festlegungskategoriestruktur} from "../../dataclasses/festlegungskategor
 import {Projektfirmenstruktur} from "../../dataclasses/projektfirmenstruktur";
 import {Kostengruppenstruktur} from "../../dataclasses/kostengruppenstruktur";
 import {KostengruppenService} from "../../services/kostengruppen/kostengruppen.service";
-import {InputCloneComponent} from "../../components/input-clone/input-clone.component";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 
 @Component({
@@ -139,16 +138,14 @@ export class PjProjektpunktEditorComponent implements OnInit, OnDestroy, AfterVi
       this.Thumbnailliste = [];
       this.Thumbbreite = 100;
       this.Spaltenanzahl = 4;
-      this.TerminValueBreite = 250;
-      this.Firmenliste        = [];
-      this.Firmenlistespalten = 3;
-      this.Firmenlistezeilen  = 0;
-      this.Mitarbeiterspalten = 3;
-      this.Mitarbeiterzeilen  = 0;
-      this.Mitarbeiterliste   = [];
-      this.ShowLVandPlanung   = false;
-
-
+      this.TerminValueBreite   = 250;
+      this.Firmenliste         = [];
+      this.Firmenlistespalten  = 3;
+      this.Firmenlistezeilen   = 0;
+      this.Mitarbeiterspalten  = 3;
+      this.Mitarbeiterzeilen   = 0;
+      this.Mitarbeiterliste    = [];
+      this.ShowLVandPlanung    = false;
       this.StatusbuttonEnabled = this.DB.CurrentProjektpunkt.Status !== this.Const.Projektpunktstatustypen.Festlegung.Name;
       this.Editorconfig = {};
 
@@ -160,7 +157,7 @@ export class PjProjektpunktEditorComponent implements OnInit, OnDestroy, AfterVi
         browser_spellcheck: true,
         newline_behavior: 'linebreak',
         height: 300,
-        base_url: '/tinymce',
+        base_url: 'tinymce',
         suffix: '.min',
         auto_focus : true,
         content_style: '',

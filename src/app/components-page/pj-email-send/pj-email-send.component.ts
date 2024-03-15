@@ -313,8 +313,6 @@ export class PjEmailSendComponent implements OnInit, OnDestroy, AfterViewInit {
 
     try {
 
-      debugger;
-
       switch (this.Pool.Emailcontent) {
 
         case this.Pool.Emailcontentvarinaten.LOPListe:
@@ -474,7 +472,6 @@ export class PjEmailSendComponent implements OnInit, OnDestroy, AfterViewInit {
           Filename          = this.DBSimontabelle.CurrentRechnung.Filename;
           Simontabellen     = lodash.filter(this.Pool.Simontabellenliste[this.DBProjekte.CurrentProjekt.Projektkey], {Leistungsphase: this.DBSimontabelle.CurrentSimontabelle.Leistungsphase});
 
-          debugger;
 
           try {
 

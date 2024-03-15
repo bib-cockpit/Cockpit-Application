@@ -499,11 +499,7 @@ export class PjProtokollEditorComponent implements OnDestroy, OnInit, AfterViewI
 
         this.DB.SaveProtokoll().then(() => {
 
-
-
             this.OkClickedEvent.emit();
-
-
 
         }).catch((error: any) => {
 
@@ -1116,8 +1112,6 @@ export class PjProtokollEditorComponent implements OnDestroy, OnInit, AfterViewI
   GetEmpfaengerExternChecked(FirmenID: string): boolean {
 
     try {
-
-      debugger;
 
       return lodash.indexOf(this.DB.CurrentProtokoll.EmpfaengerExternIDListe, FirmenID) !== -1;
 

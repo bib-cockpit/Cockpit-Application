@@ -23,7 +23,12 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },              {
+                "glob": "**/*",
+                "input": "src/assets/tinymce/langs",
+                "output": "tinymce/langs"
               },
+
               {
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",

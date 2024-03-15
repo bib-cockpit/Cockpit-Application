@@ -56,7 +56,7 @@ export class CommonEinstellungenPage implements OnInit, OnDestroy {
         height: 800,
         auto_focus : true,
         content_style: 'body { color: black; margin: 0; line-height: 0.9; }, ',
-        base_url: 'assets/tinymce', // Root for resources
+        base_url: 'tinymce', // Root for resources
         suffix: '.min',        // Suffix to use when loading resources
         toolbar: [
           { name: 'styles',      items: [ 'forecolor', 'backcolor', 'fontfamily', 'fontsize' ] },

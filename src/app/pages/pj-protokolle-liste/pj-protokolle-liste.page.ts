@@ -383,18 +383,23 @@ export class PjProtokolleListePage implements OnInit, OnDestroy {
     try {
 
       let File: Teamsfilesstruktur;
+      let Result: any;
 
       File      = this.GraphService.GetEmptyTeamsfile();
       File.id   = Protokoll.FileID;
       File.name = Protokoll.Filename;
 
-      debugger;
 
-      await this.GraphService.DownloadPDFSiteFile(File);
+      Result = await this.GraphService.DownloadPDFSiteFile(File);
 
-      this.Tools.PushPage(this.Const.Pages.PDFViewerPage);
+      if(Result !== null) {
 
+        this.Tools.PushPage(this.Const.Pages.PDFViewerPage);
+      }
+      else {
 
+        this.Tools.ShowHinweisDialog('Die Datei "' + File.name + '" wurde nicht gefunden.')
+      }
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'Projekt Liste', 'ShowPdfButtonClicked', this.Debug.Typen.Page);
@@ -578,8 +583,6 @@ export class PjProtokolleListePage implements OnInit, OnDestroy {
   AddProtokollpunktClickedHandler() {
 
     try {
-
-      debugger;
 
       if(this.DB.CurrentProtokoll._id === null) {
 
@@ -1123,7 +1126,12 @@ export class PjProtokolleListePage implements OnInit, OnDestroy {
 
     try {
 
-      await this.GraphService.DownloadPDFSiteFileViaLink(Protokoll.FileID);
+      let Result = await this.GraphService.DownloadPDFSiteFileViaLink(Protokoll.FileID);
+
+      if(Result === null) {
+
+        this.Tools.ShowHinweisDialog('Die Datei "' + Protokoll.Filename + '" wurde nicht gefunden.')
+      }
 
     } catch (error) {
 

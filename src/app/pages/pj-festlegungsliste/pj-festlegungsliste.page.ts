@@ -202,9 +202,11 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
       let PosA: number;
       let Solltext: string;
       let Suchtext: string;
+      let Punkt: Projektpunktestruktur;
       let Kategorie: Festlegungskategoriestruktur;
       let Gruppenliste: number[] = [];
       let Index: number;
+      let Unknown: boolean;
 
       // Festlegungskategorien sortieren
 
@@ -251,8 +253,6 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
         });
 
         // Filter nach Leistungsphase
-
-        debugger;
 
         if(this.Pool.Mitarbeitersettings.LeistungsphaseFilter !== null && this.Pool.Mitarbeitersettings.LeistungsphaseFilter !== this.Const.Leistungsphasenvarianten.UNBEKANNT) {
 
@@ -301,7 +301,7 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
           Liste              = lodash.cloneDeep(Projektpunkteliste);
           Projektpunkteliste = [];
 
-          for(let Punkt of Liste) {
+          for(Punkt of Liste) {
 
             Solltext = this.Festlegungfiltertext.toLowerCase();
             Suchtext = Punkt.Aufgabe.toLowerCase();
@@ -353,7 +353,28 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
       }
 
       this.NoKostengruppePunkteliste = [];
-      this.NoKostengruppePunkteliste = lodash.filter(Projektpunkteliste, {FestlegungskategorieID: null});
+
+      for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
+
+
+        if(Punkt.FestlegungskategorieID !== null) {
+
+          Unknown = true;
+
+          for(let Displayliste of this.DB.Displayliste) {
+
+              if(lodash.findIndex(Displayliste, {_id: Punkt._id}) !== -1) Unknown = false;
+          }
+
+          if(Unknown === true) {
+
+            this.NoKostengruppePunkteliste.push(Punkt);
+          }
+        }
+
+      }
+
+
 
       // this.Eintraegeanzahl += this.NoKostengruppePunkteliste.length;
 
@@ -498,8 +519,6 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
               break;
 
             case 'Filter':
-
-              debugger;
 
               Kategorie = lodash.find(this.Pool.Festlegungskategorienliste[this.DBProjekte.CurrentProjekt.Projektkey], {_id: data});
 
@@ -737,8 +756,6 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
           }
 
           if(origin === 'Filter') {
-
-            debugger;
 
             this.Auswahlindex = lodash.indexOf(this.Pool.Festlegungskategorienliste[this.DBProjekte.CurrentProjekt.Projektkey], (Eintrag: Festlegungskategoriestruktur) => {
 

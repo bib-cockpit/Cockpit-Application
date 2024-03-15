@@ -1525,7 +1525,7 @@ export class Graphservice {
     }
   }
 
-  public async DownloadPDFSiteFile(file: Teamsfilesstruktur): Promise<Teamsdownloadstruktur> {
+  public async DownloadPDFSiteFile(file: Teamsfilesstruktur): Promise<any> {
 
     try {
 
@@ -1554,22 +1554,19 @@ export class Graphservice {
             Download.url     = result['@microsoft.graph.downloadUrl'];
             Download.context = result['@odata.context'];
 
-            debugger;
-
             this.CurrentPDFDownload = Download;
 
             resolve(Download);
 
           }).catch((error: GraphError) => {
 
-            debugger;
 
-            reject(error);
+            resolve(null);
           });
         }
         else {
 
-          reject(null);
+          resolve(null);
         }
       });
 
@@ -1624,7 +1621,7 @@ export class Graphservice {
 
             debugger;
 
-            reject(error);
+            resolve(null);
           });
         }
         else {

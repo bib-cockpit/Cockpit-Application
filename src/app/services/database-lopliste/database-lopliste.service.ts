@@ -297,6 +297,8 @@ export class DatabaseLoplisteService {
             Daten.LOPListe.GesendetZeitstempel = Teamsfile.GesendetZeitstempel;
             Daten.LOPListe.GesendetZeitstring  = Teamsfile.GesendetZeitstring;
 
+            debugger;
+
             resolve(Daten.LOPListe);
           },
           error: (error: HttpErrorResponse) => {
