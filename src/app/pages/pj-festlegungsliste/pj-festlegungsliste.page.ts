@@ -354,10 +354,17 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
 
         debugger;
 
-        this.NoKostengruppePunkteliste = lodash.filter(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey], (punkt: Projektpunktestruktur) => {
+
+
+        this.NoKostengruppePunkteliste = lodash.cloneDeep(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]);
+
+        /*
+        .filter(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey], (punkt: Projektpunktestruktur) => {
 
           return punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name;
         });
+
+         */
       }
 
 
