@@ -354,11 +354,15 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
 
       this.NoKostengruppePunkteliste = [];
 
+      debugger;
+
       for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
 
 
         if(Punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name) {
 
+          this.NoKostengruppePunkteliste.push(Punkt);
+          /*
           Unknown = true;
 
           for(let Displayliste of this.DB.Displayliste) {
@@ -368,8 +372,9 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
 
           if(Unknown === true) {
 
-            this.NoKostengruppePunkteliste.push(Punkt);
           }
+
+           */
         }
 
       }
