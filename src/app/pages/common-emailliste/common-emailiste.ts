@@ -172,7 +172,7 @@ export class CommonEmaillistePage implements OnInit, OnDestroy{
         // suffix: '.min',        // Suffix to use when loading resources
         toolbar: [
           // { name: 'history', items: [ 'undo', 'redo' ] },
-          { name: 'styles',      items: [ 'forecolor', 'backcolor' ] }, // , 'fontfamily', 'fontsize'
+          { name: 'styles',      items: [ 'forecolor', 'backcolor', 'fontfamily', 'fontsize' ] },
           { name: 'formatting',  items: [ 'bold', 'italic', 'underline', 'strikethrough' ] },
           { name: 'alignment',   items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
           { name: 'indentation', items: [ 'outdent', 'indent' ] }

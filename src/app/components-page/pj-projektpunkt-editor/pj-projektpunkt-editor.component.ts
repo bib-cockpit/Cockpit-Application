@@ -165,7 +165,7 @@ export class PjProjektpunktEditorComponent implements OnInit, OnDestroy, AfterVi
         auto_focus : true,
         content_style: '',
         toolbar: [
-          { name: 'styles',      items: [ 'forecolor', 'backcolor' ] }, // , 'fontfamily', 'fontsize'
+          { name: 'styles',      items: [ 'forecolor', 'backcolor', 'fontfamily', 'fontsize' ] },
           { name: 'formatting',  items: [ 'bold', 'italic', 'underline', 'strikethrough' ] },
           { name: 'alignment',   items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
           { name: 'indentation', items: [ 'outdent', 'indent' ] }

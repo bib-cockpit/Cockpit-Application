@@ -59,7 +59,7 @@ export class CommonEinstellungenPage implements OnInit, OnDestroy {
         base_url: 'assets/tinymce', // Root for resources
         suffix: '.min',        // Suffix to use when loading resources
         toolbar: [
-          { name: 'styles',      items: [ 'forecolor', 'backcolor' ] }, // , 'fontfamily', 'fontsize'
+          { name: 'styles',      items: [ 'forecolor', 'backcolor', 'fontfamily', 'fontsize' ] },
           { name: 'formatting',  items: [ 'bold', 'italic', 'underline', 'strikethrough' ] },
           { name: 'alignment',   items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
           { name: 'indentation', items: [ 'outdent', 'indent' ] }
