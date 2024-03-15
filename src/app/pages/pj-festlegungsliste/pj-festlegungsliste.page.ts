@@ -352,52 +352,24 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
 
         this.NoKostengruppePunkteliste = [];
 
-        debugger;
+        for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
 
+          if(Punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name) {
 
+            Unknown = true;
 
-        this.NoKostengruppePunkteliste = lodash.cloneDeep(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]);
+            for(let Displayliste of this.DB.Displayliste) {
 
-        /*
-        .filter(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey], (punkt: Projektpunktestruktur) => {
+                if(lodash.findIndex(Displayliste, {_id: Punkt._id}) !== -1) Unknown = false;
+            }
 
-          return punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name;
-        });
+            if(Unknown === true) {
 
-         */
-      }
-
-
-
-          /*
-
-      for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
-
-
-        if(Punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name) {
-
-          this.NoKostengruppePunkteliste.push(Punkt);
-          Unknown = true;
-
-          for(let Displayliste of this.DB.Displayliste) {
-
-              if(lodash.findIndex(Displayliste, {_id: Punkt._id}) !== -1) Unknown = false;
+              this.NoKostengruppePunkteliste.push(Punkt);
+            }
           }
-
-          if(Unknown === true) {
-
-          }
-
         }
-
       }
-           */
-
-
-
-      // this.Eintraegeanzahl += this.NoKostengruppePunkteliste.length;
-
-
 
     } catch (error) {
 

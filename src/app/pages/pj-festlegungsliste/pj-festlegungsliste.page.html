@@ -172,12 +172,14 @@
                         </td>
                         <td *ngIf="!Punkt.Filtered" [innerHTML]="Punkt.Aufgabe | safe: 'html'" [style.font-size.px]="Pool.Mitarbeitersettings.Textsize"></td>
                         <td *ngIf="Punkt.Filtered" [innerHTML]="GetFilteredText(Punkt) | safe: 'html'" [style.font-size.px]="Pool.Mitarbeitersettings.Textsize"></td>
+                        <!--
                         <td>_id: {{Punkt._id}}</td>
                         <td>F_KategorieID: {{Punkt.FestlegungskategorieID}}</td>
                         <td>Status: {{Punkt.Status}}</td>
                         <td>OKG: {{Punkt.Oberkostengruppe  !== null ? Punkt.Oberkostengruppe.toString()  : 'null'}}</td>
                         <td>HKG: {{Punkt.Hauptkostengruppe !== null ? Punkt.Hauptkostengruppe.toString() : 'null'}}</td>
                         <td>HKG: {{Punkt.Unterkostengruppe !== null ? Punkt.Unterkostengruppe.toString() : 'null'}}</td>
+                        -->
                       </tr>
                     </table>
                   </div>
