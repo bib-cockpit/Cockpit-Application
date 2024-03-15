@@ -1470,27 +1470,33 @@ export class PjBaustelleLoplistePage implements OnInit, OnDestroy {
   }
 
 
-  async ThumbnailClicked(event: MouseEvent, Thumbliste: Thumbnailstruktur[], Index: number) {
+  async ThumbnailClicked(event: MouseEvent, Thumbliste: Thumbnailstruktur[][], Zeilenindex: number,  Thumbindex: number) {
 
     try {
 
       let Imagedaten: any[] = [];
+      let Thumbzeile: Thumbnailstruktur[];
+      let Thumb: Thumbnailstruktur;
+      let Index: number;
 
       event.preventDefault();
       event.stopPropagation();
 
-      let Token = await this.AuthService.RequestToken('.default');
+      Index = Zeilenindex * this.Spaltenanzahl + Thumbindex;
 
-      for (let Thumb of Thumbliste) {
+      for (Thumbzeile of Thumbliste) {
 
-        if(Thumb !== null) {
+        for(Thumb of Thumbzeile) {
 
-          Imagedaten.push(
+          if(Thumb !== null) {
+
+            Imagedaten.push(
             {
-              mainUrl:      Thumb.weburl,
+              mainUrl:      Thumb.largeurl,
               thumbnailUrl: Thumb.smallurl,
               description:  ''
             });
+          }
         }
       }
 
@@ -1498,9 +1504,44 @@ export class PjBaustelleLoplistePage implements OnInit, OnDestroy {
         images: Imagedaten,
         currentSelected: Index
       });
+
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'LOP Liste', 'ThumbnailClicked', this.Debug.Typen.Page);
+    }
+  }
+
+  async ThumbnailBigClicked(event: MouseEvent, Thumbliste: Thumbnailstruktur[],  Thumbindex: number) {
+
+    try {
+
+      let Imagedaten: any[] = [];
+      let Thumb: Thumbnailstruktur;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      for(Thumb of Thumbliste) {
+
+        if(Thumb !== null) {
+
+          Imagedaten.push(
+          {
+            mainUrl:      Thumb.largeurl,
+            thumbnailUrl: Thumb.smallurl,
+            description:  ''
+          });
+        }
+      }
+
+      this.Imageviewer = new ImageViewer({
+        images: Imagedaten,
+        currentSelected: Thumbindex
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'LOP Liste', 'ThumbnailBigClicked', this.Debug.Typen.Page);
     }
   }
 

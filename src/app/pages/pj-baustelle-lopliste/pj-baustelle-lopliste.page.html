@@ -172,7 +172,7 @@
 
                       <span *ngIf="Punkt.ProtokollShowBilder && Punkt.Bilderliste.length > 0 && Punkt.Thumbnailsize === 'large'" style="color: #307ac1">Siehe Bilder im Anhang</span>
 
-                      <table *ngIf="Thumbnailliste[LOP._id][Punktindex];">
+                      <table *ngIf="Thumbnailliste[LOP._id][Punktindex]">
                         <tr *ngFor="let Zeilenliste of Thumbnailliste[LOP._id][Punktindex];  let Zeilenindex = index">
                           <ng-container *ngFor="let Thumb of Zeilenliste; let Thumbnailindex = index">
                             <td style="cursor: pointer;">
@@ -180,7 +180,7 @@
 
                                 <table *ngIf="Thumb.weburl !== null">
                                   <tr>
-                                    <td style="padding: 2px" (click)="ThumbnailClicked($event, Zeilenliste, Thumbnailindex)">
+                                    <td style="padding: 2px" (click)="ThumbnailClicked($event, Thumbnailliste[LOP._id][Punktindex], Zeilenindex, Thumbnailindex)">
                                       <div class="imageclass">
                                         <img  [src]="GetThumbSource(Punkt, Thumb)"
                                               [style.width.px]="Thumbbreite[LOP._id][Punktindex]" [style.height.px]="Thumbhoehe[LOP._id][Punktindex]"/>
@@ -336,7 +336,7 @@
           </tr>
           <tr *ngFor="let Thumb of BigThumbnailliste; let Index = index">
             <td style="text-align: center; background: #444444; color: white;">{{BigThumbnailnumernliste[Index]}}</td>
-            <td colspan="11" (click)="ThumbnailClicked($event, BigThumbnailliste, Index)">
+            <td colspan="11" (click)="ThumbnailBigClicked($event, BigThumbnailliste, Index)">
               <img [src]="Thumb.largeurl" [style.height.px]="Thumb.height.large" [style.wdth.px]="Thumb.width.large">
             </td>
           </tr>
