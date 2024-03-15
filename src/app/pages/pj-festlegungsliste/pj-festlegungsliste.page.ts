@@ -350,11 +350,19 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
           Index++;
         }
 
+        this.NoKostengruppePunkteliste = [];
+
+        debugger;
+
+        this.NoKostengruppePunkteliste = lodash.filter(this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey], (punkt: Projektpunktestruktur) => {
+
+          return punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name;
+        });
       }
 
-      this.NoKostengruppePunkteliste = [];
 
-      debugger;
+
+          /*
 
       for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
 
@@ -362,7 +370,6 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
         if(Punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name) {
 
           this.NoKostengruppePunkteliste.push(Punkt);
-          /*
           Unknown = true;
 
           for(let Displayliste of this.DB.Displayliste) {
@@ -374,10 +381,10 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
 
           }
 
-           */
         }
 
       }
+           */
 
 
 
