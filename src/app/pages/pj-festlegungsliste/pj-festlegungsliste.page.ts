@@ -357,7 +357,7 @@ export class PjFestlegungslistePage implements OnInit, OnDestroy {
       for(Punkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
 
 
-        if(Punkt.FestlegungskategorieID !== null) {
+        if(Punkt.Status === this.Const.Projektpunktstatustypen.Festlegung.Name) {
 
           Unknown = true;
 
