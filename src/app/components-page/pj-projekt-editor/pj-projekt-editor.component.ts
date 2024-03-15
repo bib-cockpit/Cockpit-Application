@@ -211,6 +211,8 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.BeteiligteFooterhoehe  = 60;
       this.BeteiligteContenthoehe = this.Basics.Contenthoehe - 2 * this.PositionY - 90 - this.BeteiligteHeaderhoehe - this.BeteiligteFooterhoehe;
 
+      this.DB.BeteiligteFirmenfilter = 'Alle';
+
       this.SetupValidation();
       this.PrepareData();
 
@@ -384,6 +386,25 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
         return 0;
       });
 
+      switch (this.DB.BeteiligteFirmenfilter) {
+
+        case 'Alle':
+
+          break;
+
+        case 'Unbekannt':
+
+          this.Beteiligtenliste = lodash.filter(this.Beteiligtenliste, { FirmaID: null });
+
+          break;
+
+        default:
+
+          this.Beteiligtenliste = lodash.filter(this.Beteiligtenliste, { FirmaID: this.DB.BeteiligteFirmenfilter });
+
+          break;
+      }
+
       this.Firmenliste  = lodash.cloneDeep(this.DB.CurrentProjekt.Firmenliste);
 
       this.Firmenliste.sort( (a: Projektfirmenstruktur, b: Projektfirmenstruktur) => {
@@ -393,6 +414,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
         return 0;
       });
+
 
       this.Mitarbeiterliste = lodash.cloneDeep(this.Pool.Mitarbeiterliste);
       Liste                 = [];
@@ -1069,7 +1091,50 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'GetFirmanameByFirmaID', this.Debug.Typen.Service);
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'GetFirmanameByFirmaID', this.Debug.Typen.Component);
     }
   }
+
+  BeteiligteFirmaButtonClicked(Firma: Projektfirmenstruktur) {
+
+    try {
+
+      this.DB.BeteiligteFirmenfilter = Firma.FirmenID;
+
+      this.PrepareData();
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'function', this.Debug.Typen.Component);
+    }
+  }
+
+  BeteiligteFirmaAlleButtonClicked() {
+
+    try {
+
+      this.DB.BeteiligteFirmenfilter = 'Alle';
+
+      this.PrepareData();
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'BeteiligteFirmaAlleButtonClicked', this.Debug.Typen.Component);
+    }
+  }
+
+  BeteiligteFirmaUnbekanntButtonClicked() {
+
+    try {
+
+      this.DB.BeteiligteFirmenfilter = 'Unbekannt';
+
+      this.PrepareData();
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'BeteiligteFirmaUnbekanntButtonClicked', this.Debug.Typen.Component);
+    }
+  }
+
 }

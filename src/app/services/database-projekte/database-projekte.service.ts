@@ -54,6 +54,7 @@ export class DatabaseProjekteService {
   public  FavoritenCellbreite: number;
   public Projektfarbenliste: Projektfarbenstruktur[];
   public Gesamtprojektliste:      Projektestruktur[];
+  public BeteiligteFirmenfilter: string;
 
 
   constructor(private Debug: DebugProvider,
@@ -79,6 +80,7 @@ export class DatabaseProjekteService {
       this.Projektfarbenliste         = [];
       this.GesamtprojektlisteHasDatenerror = false;
       this.SchnellaufgabeProjekt = null;
+      this.BeteiligteFirmenfilter = 'Alle';
 
       this.Projektfarbenliste.push({Name: 'Grau',          Background: '#444444', Foreground: 'white'});
       this.Projektfarbenliste.push({Name: 'Hellblau',      Background: '#2554C7', Foreground: ''});

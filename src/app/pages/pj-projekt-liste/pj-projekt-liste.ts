@@ -123,7 +123,7 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       this.Dialoghoehe       = 400;
       this.Dialogbreite      = 600;
       this.DialogPosY        = 100;
-      this.StrukturDialogbreite = 1260;
+      this.StrukturDialogbreite = 1400;
       this.StrukturDialoghoehe  = 800;
       this.Filter            = '';
       this.Kontaktephabet    = this.Standardalphabet;
@@ -1260,8 +1260,12 @@ export class PjProjektListePage implements OnInit, OnDestroy {
 
         if(lodash.isUndefined(lodash.find(this.DB.CurrentProjekt.Beteiligtenliste, { BeteiligtenID: Beteiligter.BeteiligtenID }))) {
 
-          this.DB.CurrentProjekt.Beteiligtenliste.push(Beteiligter);
+          if(this.DB.BeteiligteFirmenfilter !== 'Alle' && this.DB.BeteiligteFirmenfilter !== 'Unbekannt') {
 
+            Beteiligter.FirmaID = this.DB.BeteiligteFirmenfilter;
+          }
+
+          this.DB.CurrentProjekt.Beteiligtenliste.push(Beteiligter);
         }
       }
 

@@ -508,6 +508,8 @@
             <ng-container *ngSwitchCase="Bereiche.Beteiligte">
 
               <div class="beteiligteheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">
+                <div class="beteiligteinnerheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">Firmen</div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
                 <div class="beteiligteinnerheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">Projektbeteiligte</div>
                 <div style="height: 100%; width: 2px; background: #307ac1;"></div>
                 <div class="beteiligteinnerheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">Mitarbeiter</div>
@@ -515,6 +517,90 @@
 
               <div class="beteiligtecontentdivclass" [style.top.px]="BeteiligteHeaderhoehe" [style.height.px]="BeteiligteContenthoehe">
 
+                <div class="beteiligtecontentinnerdivclass" [style.height.px]="BeteiligteContenthoehe">
+
+                  <!--
+                   (ionChange)="BeteiligteFirmenfilterChanged($event)"
+                   -->
+
+                  <ion-list class="ion-no-padding">
+                    <ion-radio-group [value]="DB.BeteiligteFirmenfilter">
+                      <ion-item class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaAlleButtonClicked()">
+                        <table class="paddingsmalltable" width="100%">
+                          <tr>
+                            <td>
+                              <table>
+                                <tr>
+                                  <td><ion-radio [value]="'Alle'"></ion-radio></td>
+                                  <td style="padding-top: 3px;font-size: 90%; font-weight: bold;">
+                                    Alle
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td style="padding-top: 3px;font-size: 90%">
+
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </ion-item>
+                      <ion-item class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaUnbekanntButtonClicked()">
+                        <table class="paddingsmalltable" width="100%">
+                          <tr>
+                            <td>
+                              <table>
+                                <tr>
+                                  <td><ion-radio [value]="'Unbekannt'"></ion-radio></td>
+                                  <td style="padding-top: 3px;font-size: 90%; font-weight: bold;">
+                                    Unbekannt
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td style="padding-top: 3px;font-size: 90%">
+
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </ion-item>
+
+                      <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Firma of Firmenliste, let i = index" (click)="BeteiligteFirmaButtonClicked(Firma)">
+                        <table class="paddingsmalltable" width="100%">
+                          <tr>
+                            <td>
+                              <table>
+                                <tr>
+                                  <td><ion-radio [value]="Firma.FirmenID"></ion-radio></td>
+                                  <td style="padding-top: 3px;font-size: 90%; font-weight: bold;">
+                                    {{Firma.Firma}}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td style="padding-top: 3px;font-size: 90%">
+                                    {{DBFirmen.GetFirmaFachbereichname(Firma.Fachfirmentyp)}}
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </ion-item>
+
+                    </ion-radio-group>
+
+
+                  </ion-list>
+
+
+                </div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
                 <div class="beteiligtecontentinnerdivclass" [style.height.px]="BeteiligteContenthoehe">
                   <ion-list class="ion-no-padding">
                     <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Beteiligt of Beteiligtenliste, let i = index" (click)="BeteiligteButtonClicked(Beteiligt)">
@@ -609,6 +695,10 @@
               </div>
 
               <div class="beteiligtefooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+                <div class="beteiligteinnerfooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+
+                </div>
+                <div style="height: 100%; width: 2px; background: #307ac1;"></div>
                 <div class="beteiligteinnerfooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
 
                   <table class="paddingtable">
