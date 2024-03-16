@@ -24,18 +24,6 @@
               </td>
               <td style="width: 20px"></td>
               <td>
-                <div class="menubuttonclass" (click)="FirmenMenuButtonClicked()">
-                  <table class="paddingsmalltable">
-                    <tr>
-                      <td><ion-icon name="business-outline" [color]="Bereich === Bereiche.Firmen ? 'schwarz' : 'weiss'"></ion-icon></td>
-                      <td [style.color]="Bereich === Bereiche.Firmen ? '#000000' : 'white'">Firmen</td>
-                      <td [style.color]="Bereich === Bereiche.Firmen ? '#000000' : 'white'">[{{DB.CurrentProjekt.Firmenliste.length}}]</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-              <td style="width: 20px"></td>
-              <td>
                 <div class="menubuttonclass" (click)="BeteiligteMenuButtonClicked()">
                   <table class="paddingsmalltable">
                     <tr>
@@ -447,64 +435,6 @@
 
             </ng-container>
 
-            <div *ngSwitchCase="Bereiche.Firmen" class="contentrightinnerclass">
-              <!-- Firmenliste -->
-              <table  *ngIf="DB.CurrentProjekt" style="width: 100%">
-                <tr>
-                  <td style="height: 42px; font-size: 120%; font-weight: bold"><b>Firmen</b></td>
-                </tr>
-              </table>
-
-              <ion-list class="ion-no-padding">
-                <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Firma of Firmenliste, let i = index" (click)="FirmaButtonClicked(Firma)">
-                  <table class="paddingsmalltable" width="100%">
-                    <tr>
-                      <td>
-                        <table>
-                          <tr>
-                            <td style="padding-top: 3px;font-size: 90%">
-                              {{Firma.Firma}}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="padding-top: 3px;font-size: 90%">
-                              {{DBFirmen.GetFirmaFachbereichname(Firma.Fachfirmentyp)}}
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-                </ion-item>
-
-              </ion-list>
-
-              <table *ngIf="Firmenliste.length === 0" class="paddingtable" width="100%">
-                <tr>
-                  <td style="height: 60px; text-align: center; vertical-align: center">
-                    keine Einträge vorhanden
-                  </td>
-                </tr>
-              </table>
-
-              <table class="paddingtable">
-                <tr>
-                  <td>
-                    <div class="importoutlookbutton" (click)="AddFirmaButtonClicked()">
-                      <table class="paddingtable">
-                        <tr>
-                          <td><ion-icon name="add-circle-outline" color="weiss"></ion-icon></td>
-                          <td style="color: white; font-size: 100%">NEUER EINTRAG</td>
-                        </tr>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-
-
             <ng-container *ngSwitchCase="Bereiche.Beteiligte">
 
               <div class="beteiligteheaderdivclass" [style.height.px]="BeteiligteHeaderhoehe">
@@ -519,13 +449,10 @@
 
                 <div class="beteiligtecontentinnerdivclass" [style.height.px]="BeteiligteContenthoehe">
 
-                  <!--
-                   (ionChange)="BeteiligteFirmenfilterChanged($event)"
-                   -->
 
                   <ion-list class="ion-no-padding">
                     <ion-radio-group [value]="DB.BeteiligteFirmenfilter">
-                      <ion-item class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaAlleButtonClicked()">
+                      <ion-item *ngIf="EditFirmenEnabled === false" class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaAlleButtonClicked()">
                         <table class="paddingsmalltable" width="100%">
                           <tr>
                             <td>
@@ -547,7 +474,7 @@
                           </tr>
                         </table>
                       </ion-item>
-                      <ion-item class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaUnbekanntButtonClicked()">
+                      <ion-item  *ngIf="EditFirmenEnabled === false" class="ion-text-wrap" class="ion-no-padding" (click)="BeteiligteFirmaUnbekanntButtonClicked()">
                         <table class="paddingsmalltable" width="100%">
                           <tr>
                             <td>
@@ -570,19 +497,19 @@
                         </table>
                       </ion-item>
 
-                      <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Firma of Firmenliste, let i = index" (click)="BeteiligteFirmaButtonClicked(Firma)">
+                      <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Firma of Firmenliste, let i = index" (click)="EditFirmenEnabled ? FirmaButtonClicked(Firma) : BeteiligteFirmaButtonClicked(Firma)">
                         <table class="paddingsmalltable" width="100%">
                           <tr>
                             <td>
                               <table>
                                 <tr>
-                                  <td><ion-radio [value]="Firma.FirmenID"></ion-radio></td>
+                                  <td *ngIf="EditFirmenEnabled === false"><ion-radio [value]="Firma.FirmenID"></ion-radio></td>
                                   <td style="padding-top: 3px;font-size: 90%; font-weight: bold;">
                                     {{Firma.Firma}}
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td></td>
+                                  <td *ngIf="EditFirmenEnabled === false"></td>
                                   <td style="padding-top: 3px;font-size: 90%">
                                     {{DBFirmen.GetFirmaFachbereichname(Firma.Fachfirmentyp)}}
                                   </td>
@@ -597,6 +524,14 @@
 
 
                   </ion-list>
+
+                  <table *ngIf="Firmenliste.length === 0" class="paddingtable" width="100%">
+                    <tr>
+                      <td style="height: 60px; text-align: center; vertical-align: center">
+                        keine Einträge vorhanden
+                      </td>
+                    </tr>
+                  </table>
 
 
                 </div>
@@ -696,6 +631,24 @@
 
               <div class="beteiligtefooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
                 <div class="beteiligteinnerfooterdivclass" [style.height.px]="BeteiligteFooterhoehe">
+
+                  <table class="paddingtable">
+                    <tr>
+                      <td style="width: 208px;">
+                        <div *ngIf="EditFirmenEnabled === false" class="importoutlookbutton" (click)="AddFirmaButtonClicked()">
+                          <table class="paddingtable">
+                            <tr>
+                              <td><ion-icon name="add-circle-outline" color="weiss"></ion-icon></td>
+                              <td style="color: white; font-size: 100%">NEUER EINTRAG</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td>
+                      <td  style="width: 20px;"></td>
+                      <td><checkbox-clon [Checked]="EditFirmenEnabled" (CheckChanged)="EditFirmenCheckChanged($event)"></checkbox-clon></td>
+                      <td>Einträge bearbeiten</td>
+                    </tr>
+                  </table>
 
                 </div>
                 <div style="height: 100%; width: 2px; background: #307ac1;"></div>

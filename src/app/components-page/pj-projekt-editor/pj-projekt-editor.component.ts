@@ -79,7 +79,6 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
     Allgemein:        'Allgemein',
     Beteiligte:       'Beteiligte',
-    Firmen:           'Firmen',
     Gebaeudestruktur: 'Gebaeudestruktur'
   };
 
@@ -106,6 +105,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
   public BeteiligteHeaderhoehe: number;
   public BeteiligteFooterhoehe: number;
   public BeteiligteContenthoehe: number;
+  public EditFirmenEnabled: boolean;
 
   constructor(public Basics: BasicsProvider,
               public Debug: DebugProvider,
@@ -141,6 +141,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.Protokollfolder     = '/';
       this.Bautagebuchfolder   = '/';
       this.Projektfolder       = '/';
+      this.EditFirmenEnabled   = false;
 
       this.BaustelleLOPListefolder = '/';
       this.RechnungListefolder     = '/';
@@ -207,7 +208,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
       this.DBGebaeude.Init();
 
-      this.BeteiligteHeaderhoehe  = 50;
+      this.BeteiligteHeaderhoehe  = 40;
       this.BeteiligteFooterhoehe  = 60;
       this.BeteiligteContenthoehe = this.Basics.Contenthoehe - 2 * this.PositionY - 90 - this.BeteiligteHeaderhoehe - this.BeteiligteFooterhoehe;
 
@@ -719,7 +720,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
     try {
 
-      this.AddFirmaClickedEvent.emit();
+      if(this.EditFirmenEnabled === false) this.AddFirmaClickedEvent.emit();
 
     } catch (error) {
 
@@ -736,18 +737,6 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Projekt Editor', 'AllgemeinMenuButtonClicked', this.Debug.Typen.Page);
-    }
-  }
-
-  FirmenMenuButtonClicked() {
-
-    try {
-
-      this.Bereich = this.Bereiche.Firmen;
-
-    } catch (error) {
-
-      this.Debug.ShowErrorMessage(error.message, 'Projekt Editor', 'FirmenMenuButtonClicked', this.Debug.Typen.Page);
     }
   }
 
@@ -1137,4 +1126,15 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  EditFirmenCheckChanged(event: { status: boolean; index: number; event: any; value: string }) {
+
+    try {
+
+      this.EditFirmenEnabled = event.status;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'EditFirmenCheckChanged', this.Debug.Typen.Component);
+    }
+  }
 }

@@ -412,7 +412,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
           }
           else {
 
-            Page = this.Const.Pages.PjBaustelleLoplistePage; // PjSchnellaufgabenListePage; // PjSimontabellelistePage; // PjListePage; // PjSimontabellelistePage; // PjProtokolleListePage; // PjProtokolleListePage; // PjAufgabenlistePage; // UrlaubFreigabenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; //
+            Page = this.Const.Pages.PjListePage; // PjSchnellaufgabenListePage; // PjSimontabellelistePage; // PjListePage; // PjSimontabellelistePage; // PjProtokolleListePage; // PjProtokolleListePage; // PjAufgabenlistePage; // UrlaubFreigabenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; //
             // PjBaustelleLoplistePage; // UrlaubEinstellungenPage; // UrlaubPlanungPage; // PjBaustelleLoplistePage; // FiMitarbeiterlistePage; // UrlaubsplanungPage; // FiStandortelistePage; // UrlaubsplanungPage; // UrlaubsplanungPage; // .PjProtokolleListePage;  // PjListePage; // PjAufgabenlistePage; // .PjFilebrowserPage;  // PjPlanungsmatrixPage; // PjFilebrowserPage; // HomePage; // .PjPlanungsmatrixPage; //.PjAufgabenlistePage; // EinstellungenPage; // PjAufgabenlistePage ; // HomePage ; // EmaillistePage //  HomePage PjBaustelleTagebuchlistePage PjBaustelleLoplistePage
 
             this.ProjekteDB.SetProjekteliste(this.ProjekteDB.CurrentFavorit.Projekteliste); // Dise Zeile bie HomePage wieder raus -> Daten über Play Button laden
