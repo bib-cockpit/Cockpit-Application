@@ -43,6 +43,7 @@ import {Projektpunktanmerkungstruktur} from "../../dataclasses/projektpunktanmer
 import {Festlegungskategoriestruktur} from "../../dataclasses/festlegungskategoriestruktur";
 import {Kostengruppenstruktur} from "../../dataclasses/kostengruppenstruktur";
 import {KostengruppenService} from "../../services/kostengruppen/kostengruppen.service";
+import {Aufgabenpersonenfilterstruktur} from "../../dataclasses/aufgabenpersonenfilterstruktur";
 
 @Component({
   selector:    'pj-aufgaben-liste-page',
@@ -75,6 +76,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
   public ShowAuswahl: boolean;
   public ShowProtokollEditor: boolean;
   public ShowMitarbeiterauswahl: boolean;
+  public ShowPersonenfilterauswahl: boolean;
   public ShowBeteiligteauswahl: boolean;
   public ShowProjektpunktEditor: boolean;
   private Auswahldialogorigin: string;
@@ -221,6 +223,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
       this.Timelinebreite           = 40;
       this.Timelinestart            = 7;
       this.Timelineende             = 18;
+      this.ShowPersonenfilterauswahl = false;
       this.Timelinelabelbreite      = this.Timelinebreite;
       this.Timelinelabelhoehe       = 30;
       this.Timelinestunden          = this.Timelineende - this.Timelinestart;
@@ -1333,17 +1336,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
         if(this.DBProjekte.CurrentProjekt !== null && this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
 
-          for(Projektpunkt of this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey]) {
-
-            this.FavoritenProjektpunkteliste.push(Projektpunkt);
-
-            /* Wird im Punkleliste Objekt gefiltert hier unnötig??
-            if(this.DBProjektpunkte.CheckFilter(Projektpunkt, false)) {
-
-            }
-
-             */
-          }
+          this.FavoritenProjektpunkteliste = this.Pool.Projektpunkteliste[this.DBProjekte.CurrentProjekt.Projektkey];
         }
 
         this.SortPunkteliste(this.FavoritenProjektpunkteliste);
@@ -1650,7 +1643,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
       this.SetProjektindexAndUrsprung(projektindex, ursprung);
 
-      this.Dialogbreite                          = 1100;
+      this.Dialogbreite                          = 1400;
       this.DBProjektpunkte.CurrentProjektpunkt   = lodash.cloneDeep(Projektpunkt);
       this.DBProjekte.CurrentProjekt             = lodash.find(this.DBProjekte.Gesamtprojektliste, {_id: Projektpunkt.ProjektID});
 
@@ -2110,6 +2103,8 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
           Aufgabenansicht = this.Pool.GetAufgabenansichten(this.DBProjekte.CurrentProjekt !== null ? this.DBProjekte.CurrentProjekt._id : null);
 
+          debugger;
+
           this.DBMitarbeitersettings.UpdateMitarbeitersettings(this.Pool.Mitarbeitersettings, Aufgabenansicht);
 
           break;
@@ -2344,7 +2339,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'LOP Liste', 'EmailCcEmpfaengerInternClickedHandler', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'Aufgabe Liste', 'EmailCcEmpfaengerInternClickedHandler', this.Debug.Typen.Page);
     }
   }
 
@@ -2357,7 +2352,7 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'LOP Liste', 'EmailSendenOkButtonClicked', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'Aufgabe Liste', 'EmailSendenOkButtonClicked', this.Debug.Typen.Page);
     }
   }
 
@@ -2373,21 +2368,46 @@ export class PjAufgabenListePage implements OnInit, OnDestroy {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'LOP Liste', 'EmailEmpfaengerExternClickedHandler', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'Aufgabe Liste', 'EmailEmpfaengerExternClickedHandler', this.Debug.Typen.Page);
     }
   }
 
-  TestButtonClicked(event: MouseEvent) {
+
+  PersonenfilterButtonClickedHandler() {
 
     try {
 
-      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Schnellaufgabenliste;
+      let Personenfilter: Aufgabenpersonenfilterstruktur = lodash.find(this.Pool.Mitarbeitersettings.AufgabenPersonenfilter, {Projektkey: this.DBProjekte.CurrentProjekt.Projektkey});
 
-      this.Tools.SetRootPage(this.Const.Pages.PjSchnellaufgabenListePage);
+
+      this.ShowPersonenfilterauswahl = true;
+      this.AuswahlIDliste            = Personenfilter.PersonenlisteID;
+
+      debugger;
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'file', 'function', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'Aufgabe Liste', 'PersonenfilterButtonClickedHandler', this.Debug.Typen.Page);
+    }
+  }
+
+  async PersonenfilterauswahlOkButtonClicked(idliste: string[]) {
+
+    try {
+
+      let Personenfilter: Aufgabenpersonenfilterstruktur = lodash.find(this.Pool.Mitarbeitersettings.AufgabenPersonenfilter, {Projektkey: this.DBProjekte.CurrentProjekt.Projektkey});
+
+      Personenfilter.PersonenlisteID = idliste;
+
+      await this.DBMitarbeitersettings.UpdateMitarbeitersettings(this.Pool.Mitarbeitersettings, null);
+
+      debugger;
+
+      this.ShowPersonenfilterauswahl = false;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, 'Aufgaben Liste', 'PersonenfilterauswahlOkButtonClicked', this.Debug.Typen.Page);
     }
   }
 }

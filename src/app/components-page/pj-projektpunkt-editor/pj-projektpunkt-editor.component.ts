@@ -138,11 +138,11 @@ export class PjProjektpunktEditorComponent implements OnInit, OnDestroy, AfterVi
       this.Thumbnailliste = [];
       this.Thumbbreite = 100;
       this.Spaltenanzahl = 4;
-      this.TerminValueBreite   = 250;
+      this.TerminValueBreite   = 410;
       this.Firmenliste         = [];
       this.Firmenlistespalten  = 3;
       this.Firmenlistezeilen   = 0;
-      this.Mitarbeiterspalten  = 3;
+      this.Mitarbeiterspalten  = 4;
       this.Mitarbeiterzeilen   = 0;
       this.Mitarbeiterliste    = [];
       this.ShowLVandPlanung    = false;
@@ -587,7 +587,7 @@ export class PjProjektpunktEditorComponent implements OnInit, OnDestroy, AfterVi
 
       if(!lodash.isUndefined(Mitarbeiter)) {
 
-        return Mitarbeiter.Vorname + ' ' + Mitarbeiter.Name + ' / ' + Mitarbeiter.Kuerzel;
+        return Mitarbeiter.Vorname + ' ' + Mitarbeiter.Name;
       }
 
     } catch (error) {

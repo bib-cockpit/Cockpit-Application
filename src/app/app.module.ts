@@ -30,6 +30,7 @@ import {environment} from "../environments/environment";
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+
 const appurl: string                   = environment.production === false ? 'http://localhost:4200' : 'https://nice-glacier-0c9ec7703.3.azurestaticapps.net';
 
 // !! Server URL auch in Pool service anpassen
@@ -138,7 +139,7 @@ const MSALGuardConfigFactory = (): MsalGuardConfiguration => {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -184,6 +185,7 @@ const MSALGuardConfigFactory = (): MsalGuardConfiguration => {
     ],
   bootstrap: [AppComponent, MsalRedirectComponent],
   exports: [
+
 
   ]
 })

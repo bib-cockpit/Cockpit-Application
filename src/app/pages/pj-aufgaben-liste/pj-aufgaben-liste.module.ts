@@ -29,6 +29,9 @@ import {PjFirmenAuswahlModule} from "../../components-page/pj-firmen-auswahl/pj-
 import {
     PjKostengruppenFestlegungskategorieAuswahlModule
 } from "../../components-page/pj-kostengruppen-festlegungkategorie-auswahl/pj-kostengruppen-festlegungskategorie-auswahl.module";
+import {
+    FiPersonenfilterAuswahlModule
+} from "../../components-page/fi-personenfilter-auswahl/fi-personenfilter-auswahl.module";
 // import {AngularImageViewerModule} from "@hreimer/angular-image-viewer";
 
 
@@ -66,6 +69,7 @@ const routes: Routes = [
         PjEmailSendModule,
         PjFirmenAuswahlModule,
         PjKostengruppenFestlegungskategorieAuswahlModule,
+        FiPersonenfilterAuswahlModule,
         // AngularImageViewerModule,
 
 

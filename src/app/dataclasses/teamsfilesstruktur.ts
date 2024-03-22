@@ -1,3 +1,5 @@
+import {Verfasserstruktur} from "./verfasserstruktur";
+
 export type Teamsfilesstruktur = {
 
   createdDateTime: string;
@@ -49,6 +51,20 @@ export type Teamsfilesstruktur = {
   };
   GesendetZeitstempel?: number;
   GesendetZeitstring?: string;
+
+  _id: string;
+  ProjektID:      string;
+  Projektkey:     string;
+  ProjektpunktID: string;
+  Filetyp:        string;
+  Leistungsphase: string;
+  Zeitstempel:    number;
+  Zeitsting:      string;
+  MimeType:       string;
+  DirectoryID:    string;
+  Beschreibung:   string;
+  Verfasser:      Verfasserstruktur;
+  __v?: any;
 };
 
 

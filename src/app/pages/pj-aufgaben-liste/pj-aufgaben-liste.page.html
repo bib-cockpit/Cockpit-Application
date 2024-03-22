@@ -7,6 +7,7 @@
       (ShowProjektauswahlEvent)="ShowProjektauswahlEventHandler()"
       (FilterChanged)="FilterChangedHandler($event)"
       (ShowProjektfilesEvent)="ShowProjektfilesHandler()"
+      (PersonenfilterButtonClicked)="PersonenfilterButtonClickedHandler()"
       (ZeitspanneFilterClicked)="ZeitspanneFilterClickedHandler()">
     </page-header-menu>
   </page-header>
@@ -452,7 +453,6 @@
                          (OkClickedEvent)="ShowZeitspannefilter = false">
 </pj-aufgaben-listefilter>
 
-
 <pj-projektpunkt-editor *ngIf="ShowProjektpunktEditor" [Dialogbreite]="Dialogbreite" [Dialoghoehe]="Dialoghoehe" [PositionY]="0"
                         [ZIndex]="3000" [Titel]="GetProjektpunkteditorTitel()" Iconname="book-outline"
                         (FachbereichClicked)="FachbereichClickedHandler()"
@@ -470,7 +470,6 @@
                                                (OkClickedEvent)="ShowKostengruppenauswahlFestlegungskategorie = false"
                                                (CancelClickedEvent)="ShowKostengruppenauswahlFestlegungskategorie = false"></pj-kostengruppen-festlegungskategorie-auswahl>
 
-
 <fi-mitarbeiter-auswahl *ngIf="ShowMitarbeiterauswahl"
                         [Titel]="'Zuständige Kollegen festlegen'"
                         [Dialogbreite]="600" [ZIndex]="4000"
@@ -480,6 +479,15 @@
                         (CancelClickedEvent)="ShowMitarbeiterauswahl = false"
                         (OkClickedEvent)="MitarbeiterauswahlOkButtonClicked($event)"
                         (StandortfilterClickedEvent)="MitarebiterStandortfilterClickedHandler()"></fi-mitarbeiter-auswahl>
+
+<fi-personenfilter-auswahl *ngIf="ShowPersonenfilterauswahl"
+                        [Titel]="'Mitrabeiter Filter festlegen'"
+                        [Dialogbreite]="600" [ZIndex]="4000"
+                        [Multiselect]="true"
+                        Iconname="people-outline"
+                        [AuswahlIDliste]="AuswahlIDliste"
+                        (CancelClickedEvent)="ShowPersonenfilterauswahl = false"
+                        (OkClickedEvent)="PersonenfilterauswahlOkButtonClicked($event)"></fi-personenfilter-auswahl>
 
 <pj-firmen-auswahl *ngIf="ShowBeteiligteauswahl"
                         [Titel]="GetBeteiligtenauswahlTitel()"

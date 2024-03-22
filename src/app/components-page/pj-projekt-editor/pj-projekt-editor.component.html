@@ -64,6 +64,7 @@
                 <table style="width: 100%">
                   <tr>
                     <td>
+
                       <table class="paddingtable">
                         <tr>
                           <td colspan="2">
@@ -266,6 +267,27 @@
                               </table>
                             </ion-col>
                           </ion-row>
+
+                          <ion-row *ngIf="DB.CurrentProjekt.ProjektFolderID !== Const.NONE">
+                            <ion-col [size]="12">
+                              <table style="width: 100%">
+                                <tr>
+                                  <td style="width: auto">
+                                    <input-clone (click)="SelectBilderfolderEvent.emit()" [Value]="Bilderfolder"
+                                                 [Enabled]="false" Titel="Speicherort Bilder" [DisabledColor]="DB.CurrentProjekt.BilderFolderID !== Const.NONE ? '#354547' : 'orange'">
+                                    </input-clone>
+                                  </td>
+                                  <td style="width: 4px"></td>
+                                  <td style="width: 46px">
+                                    <ion-button (click)="SelectBilderfolderEvent.emit()" size="small" color="burnicklbraun">
+                                      <ion-icon name="folder"></ion-icon>
+                                    </ion-button>
+                                  </td>
+                                </tr>
+                              </table>
+                            </ion-col>
+                          </ion-row>
+
                           <ion-row *ngIf="DB.CurrentProjekt.ProjektFolderID !== Const.NONE">
                             <ion-col [size]="12">
                               <table style="width: 100%">
@@ -374,6 +396,46 @@
 
                       </div>
 
+                    </td>
+                    <td valign="top" style="width: 300px;">
+                      <ion-grid *ngIf="DB.CurrentProjekt">
+                        <ion-row>
+                          <ion-col>
+                            <ion-text color="burnicklgruen"><b>Projektlogo</b></ion-text>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col>
+                            <div class="logokeeperdiv">
+                              <span *ngIf="LogoUrl === null" style="font-size: 80%;">kein Logo festgelegt</span>
+                              <img  *ngIf="LogoUrl !== null" [src]="LogoUrl" [style.width.px]="DB.CurrentProjekt.Projektlogobreite" (load)="ImageLoadedHandler($event)">
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col>
+
+                            <table width="100%" *ngIf="DB.CurrentProjekt.BilderFolderID !== Const.NONE">
+                              <tr>
+                                <td>
+                                  <ion-button (click)="popFileChooser()" [color]="Basics.Ionicfarben.BurnicklBraun" size="small">Dateien durchsuchen</ion-button>
+                                </td>
+                                <td style="width: 40px" align="right;" *ngIf="DB.CurrentProjekt.ProjektlogofileID !== null">
+                                  <ion-button (click)="DeleteLogo()" size="small"  color="burnicklbraun">
+                                    <ion-icon style="font-size: 20px;" name="trash"></ion-icon>
+                                  </ion-button>
+                                </td>
+                              </tr>
+                              <tr *ngIf="DB.CurrentProjekt.ProjektlogofileID !== null">
+                                <td colspan="2">
+                                  <input-clone [(Value)]="DB.CurrentProjekt.Projektlogobreite" Titel="Projektlogobreite"></input-clone>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
                     </td>
 
                     <!--

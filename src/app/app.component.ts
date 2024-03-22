@@ -20,6 +20,7 @@ import {Mitarbeiterstruktur} from "./dataclasses/mitarbeiterstruktur";
 import {environment} from "../environments/environment";
 import {DatabaseUrlaubService} from "./services/database-urlaub/database-urlaub.service";
 import {DatabaseSimontabelleService} from "./services/database-simontabelle/database-simontabelle.service";
+import {DatabaseTeamsfilesService} from "./services/database-teamsfiles/database-teamsfiles.service";
 
 @Component({
   selector: 'app-root',
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
               private MitarbeitersettingsDB: DatabaseMitarbeitersettingsService,
               private StandortDB: DatabaseStandorteService,
               private ProjekteDB: DatabaseProjekteService,
+              private TeamsfilesDB: DatabaseTeamsfilesService,
               private SimontabelllenDB: DatabaseSimontabelleService,
               private UrlaubDB: DatabaseUrlaubService,
               public GraphService: Graphservice,
@@ -205,7 +207,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
           {
             this.Pool.ProgressMessage = 'Lade eigene Daten';
 
-            await this.GraphService.GetOwnUserinfo();
+            await this.GraphService.GetOwnUserinfo(); // 1
 
             this.Pool.CurrentProgressValue++;
           }
@@ -215,7 +217,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
             this.Pool.ProgressMessage = 'Lade eigens Bild';
 
-            Result = await this.GraphService.GetOwnUserimage();
+            Result = await this.GraphService.GetOwnUserimage(); // 2
 
             if(Result === null) this.Debug.ShowMessage('Benutzerbild konnte nicht geladen werden.', 'App Component', 'StartApp', this.Debug.Typen.Component);
 
@@ -230,61 +232,67 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
           this.Pool.ProgressMessage = 'Lade Outlookkategorien';
 
-          await this.GraphService.GetOwnOutlookCategories(); // 3
+          await this.GraphService.GetOwnOutlookCategories(); // 4
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Change Log';
 
-          await this.Pool.ReadChangelogliste();
+          await this.Pool.ReadChangelogliste(); // 5
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Standortliste';
 
-          await this.Pool.ReadStandorteliste(); // 5
+          await this.Pool.ReadStandorteliste(); // 6
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade aktuelle Mitarbeiterliste';
 
-          await this.Pool.ReadMitarbeiterliste(); // 6
+          await this.Pool.ReadMitarbeiterliste(); // 7
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Gesamtprojektliste';
 
-          await this.ProjekteDB.ReadGesamtprojektliste(); // 7
+          await this.ProjekteDB.ReadGesamtprojektliste(); // 8
+
+          this.Pool.CurrentProgressValue++;
+
+          this.Pool.ProgressMessage = 'Lade Projektlogos';
+
+          await this.TeamsfilesDB.ReadTeamslogoliste(); // 9
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Erstelle Musterprojekt';
 
-          await this.ProjekteDB.AddMusterprojekt(); // 8
+          await this.ProjekteDB.AddMusterprojekt(); // 10
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Aktuallisiere Mitarbeiterliste';
 
-          let Liste = await this.GraphService.GetAllUsers(); // 9
+          let Liste = await this.GraphService.GetAllUsers(); // 11
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Bundesländer';
 
-          await this.UrlaubDB.ReadRegionen('DE'); // 4
+          await this.UrlaubDB.ReadRegionen('DE'); // 12
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Ferien Deutschland';
 
-          await this.UrlaubDB.ReadFerien('DE');
+          await this.UrlaubDB.ReadFerien('DE'); // 13
 
           this.Pool.CurrentProgressValue++;
 
           this.Pool.ProgressMessage = 'Lade Ferien Bulgarien';
 
-          await this.UrlaubDB.ReadFerien('BG');
+          await this.UrlaubDB.ReadFerien('BG'); // 14
 
           this.Pool.CurrentProgressValue++;
 
@@ -444,7 +452,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentChecked {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'file', 'function', this.Debug.Typen.Page);
+      this.Debug.ShowErrorMessage(error, 'App Component', 'StartApp', this.Debug.Typen.Component);
     }
   }
 

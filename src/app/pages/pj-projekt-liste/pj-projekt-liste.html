@@ -20,78 +20,90 @@
 <ion-content>
   <ion-list>
     <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Projekt of Liste, let i = index"  (click)="ProjektButtonClicked(Projekt)">
-      <ion-grid class="maingridclass">
-        <ion-row  *ngIf="Buchstabenliste[i] !== ''">
-          <ion-col size="12">
-            <table class="paddingsmalltable">
-              <tr>
-                <td>
-                  <ion-text color="orange"><b>{{Buchstabenliste[i]}}</b></ion-text>
-                </td>
-              </tr>
-            </table>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="5" sizeMd="5" sizeLg="5" sizeXl="5">
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="12">
-                    <table>
-                      <tr>
-                        <td>
-                          <div class="kontaktclass">
-                            <table class="paddingsmalltable">
-                              <tr>
-                                <td style="width: 30px">
-                                  <div class="projecticonclass" [style.background]="DB.GetProjektfarbeByProjekt(Projekt)">
-                                    <img  *ngIf="DB.CheckProjektdaten(Projekt) === false" src="/assets/svgs/alert.svg" style="height: 26px"/>
-                                  </div>
-                                </td>
-                                <td>
-                                  <table>
-                                    <tr *ngIf="!Projekt.Filtered">
-                                      <td>{{Projekt.Projektname}} {{Projekt.Projektkurzname !== '' ? '/ ' + Projekt.Projektkurzname : '' }}</td>
-                                     <td></td>
-                                    </tr>
-                                    <tr *ngIf="Projekt.Filtered">
-                                      <td>
-                                        <span>{{Projekt.Text_A}}</span><span style="color: green">{{Projekt.Text_B}}</span><span>{{Projekt.Text_C}}</span> / {{Projekt.Projektkurzname}}
-                                      </td>
-                                      <td></td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td colspan="2">
-
-                                  <table class="infotable" style="white-space:nowrap;">
+      <table style="width: 100%">
+        <tr>
+          <td style="width: auto;" valign="top">
+            <ion-grid class="maingridclass">
+              <ion-row  *ngIf="Buchstabenliste[i] !== ''">
+                <ion-col size="12">
+                  <table class="paddingsmalltable">
+                    <tr>
+                      <td>
+                        <ion-text color="orange"><b>{{Buchstabenliste[i]}}</b></ion-text>
+                      </td>
+                    </tr>
+                  </table>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeXs="12" sizeSm="5" sizeMd="5" sizeLg="5" sizeXl="5">
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="12">
+                          <table>
+                            <tr>
+                              <td>
+                                <div class="kontaktclass">
+                                  <table class="paddingsmalltable">
                                     <tr>
-                                      <td class="ergonametextclass">Projektnummer:</td><td>{{Projekt.Projektnummer}}</td><td style="width: 20px"></td>
-                                      <td class="ergonametextclass">Projektleiter:</td><td>{{DBMitarbeiter.GetMitarbeitername(Projekt.ProjektleiterID)}}</td><td style="width: 20px"></td>
-                                      <td class="ergonametextclass">Stellvertreter:</td><td>{{DBMitarbeiter.GetMitarbeitername(Projekt.StellvertreterID)}}</td><td style="width: 20px"></td>
-                                      <td class="ergonametextclass">Standort:</td><td>{{DBStandort.GetStandort(Projekt.StandortID)}}</td><td style="width: 20px"></td>
-                                      <td class="ergonametextclass">Status:</td><td [style.color]="DB.GetProjektstatuscolor(Projekt.Status)">{{Projekt.Status}}</td><td style="width: 20px"></td>
+                                      <td style="width: 30px">
+                                        <div class="projecticonclass" [style.background]="DB.GetProjektfarbeByProjekt(Projekt)">
+                                          <img  *ngIf="DB.CheckProjektdaten(Projekt) === false" src="/assets/svgs/alert.svg" style="height: 26px"/>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <table>
+                                          <tr *ngIf="!Projekt.Filtered">
+                                            <td>{{Projekt.Projektname}} {{Projekt.Projektkurzname !== '' ? '/ ' + Projekt.Projektkurzname : '' }}</td>
+                                           <td></td>
+                                          </tr>
+                                          <tr *ngIf="Projekt.Filtered">
+                                            <td>
+                                              <span>{{Projekt.Text_A}}</span><span style="color: green">{{Projekt.Text_B}}</span><span>{{Projekt.Text_C}}</span> / {{Projekt.Projektkurzname}}
+                                            </td>
+                                            <td></td>
+                                          </tr>
+                                        </table>
+                                      </td>
                                     </tr>
-                                    <tr *ngIf="Projekt.ProjektIsReal === false">
-                                      <td colspan="5" style="color: #2f6299; font-weight: bold">kein reales Projekt</td>
+                                    <tr>
+                                      <td colspan="2">
+
+                                        <table class="infotable" style="white-space:nowrap;">
+                                          <tr>
+                                            <td class="ergonametextclass">Projektnummer:</td><td>{{Projekt.Projektnummer}}</td><td style="width: 20px"></td>
+                                            <td class="ergonametextclass">Projektleiter:</td><td>{{DBMitarbeiter.GetMitarbeitername(Projekt.ProjektleiterID)}}</td><td style="width: 20px"></td>
+                                            <td class="ergonametextclass">Stellvertreter:</td><td>{{DBMitarbeiter.GetMitarbeitername(Projekt.StellvertreterID)}}</td><td style="width: 20px"></td>
+                                            <td class="ergonametextclass">Standort:</td><td>{{DBStandort.GetStandort(Projekt.StandortID)}}</td><td style="width: 20px"></td>
+                                            <td class="ergonametextclass">Status:</td><td [style.color]="DB.GetProjektstatuscolor(Projekt.Status)">{{Projekt.Status}}</td><td style="width: 20px"></td>
+                                          </tr>
+                                          <tr *ngIf="Projekt.ProjektIsReal === false">
+                                            <td colspan="5" style="color: #2f6299; font-weight: bold">kein reales Projekt</td>
+                                          </tr>
+                                        </table>
+
+                                      </td>
                                     </tr>
                                   </table>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
 
-                                </td>
-                              </tr>
-                            </table>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+          </td>
+          <td style="width: 300px;" align="right">
+            <img *ngIf="LogoUrlListe[i] !== null" [src]="LogoUrlListe[i]" [style.width.px]="Projekt.Projektlogobreite">
+          </td>
+          <td style="width: 50px;"></td>
+        </tr>
+      </table>
+
     </ion-item>
   </ion-list>
 
@@ -135,6 +147,7 @@
                     (EditGeschossClickedEvent)="EditGeschossClickedHandler($event)"
                     (LeistungsphaseClickedEvent)="LeistungsphaseClickedHandler()"
                     (SelectBaustelleLOPListefolderEvent)="SelectBaustelleLOPListefolderHandler()"
+                   (SelectBilderfolderEvent)="SelectBilderfolderHandler()"
                     (SelectBautagebuchfolderEvent)="SelectBautagebuchfolderHandler()"
                     (SelectProtokollfolderEvent)="SelectProtokollfolderHandler()"
                     (SelectProjektfolderEvent)="SelectProjektfolderHandler()"

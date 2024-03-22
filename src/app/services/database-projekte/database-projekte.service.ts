@@ -180,7 +180,10 @@ export class DatabaseProjekteService {
         BautagebuchFolderID:   this.Const.NONE,
         ProtokolleFolderID:    this.Const.NONE,
         ProjektFolderID:       this.Const.NONE,
+        BilderFolderID:        this.Const.NONE,
         RechnungListefolderID: this.Const.NONE,
+        ProjektlogofileID: null,
+        Projektlogobreite: "250",
         Bauteilliste: [],
         Beteiligtenliste: [],
         Firmenliste: [],
@@ -321,10 +324,14 @@ export class DatabaseProjekteService {
               if(lodash.isUndefined(Projekt.LastLOPEintragnummer))  Projekt.LastLOPEintragnummer  = 0;
               if(lodash.isUndefined(Projekt.Firmenliste))           Projekt.Firmenliste           = [];
               if(lodash.isUndefined(Projekt.Projektmailadresse))    Projekt.Projektmailadresse    = "";
+              if(lodash.isUndefined(Projekt.BilderFolderID))        Projekt.BilderFolderID        = this.Const.NONE;
+              if(lodash.isUndefined(Projekt.ProjektlogofileID))     Projekt.ProjektlogofileID     = null;
+              if(lodash.isUndefined(Projekt.Projektlogobreite))     Projekt.Projektlogobreite     = "250";
 
               if(Projekt.BautagebuchFolderID    === '') Projekt.BautagebuchFolderID   = this.Const.NONE;
               if(Projekt.ProtokolleFolderID     === '') Projekt.ProtokolleFolderID    = this.Const.NONE;
               if(Projekt.BaustellenLOPFolderID  === '') Projekt.BaustellenLOPFolderID = this.Const.NONE;
+              if(Projekt.BilderFolderID         === '') Projekt.BilderFolderID        = this.Const.NONE;
 
               for(let Beteiligter of Projekt.Beteiligtenliste) {
 
@@ -617,9 +624,12 @@ export class DatabaseProjekteService {
 
         _id: null,
         StandortID:       this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten.StandortID : this.Const.NONE,
-        ProjektleiterID:  this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten._id : this.Const.NONE,
+        ProjektleiterID:  this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten._id        : this.Const.NONE,
         StellvertreterID: this.Const.NONE,
         Projektkey:       this.Const.NONE,
+        BilderFolderID:   this.Const.NONE,
+        ProjektlogofileID: null,
+        Projektlogobreite: "250",
         Projektmailadresse: "",
         Projektname:      "",
         Projektkurzname:  "",
@@ -630,9 +640,9 @@ export class DatabaseProjekteService {
         Status: "Bearbeitung",
         Verfasser: {
 
-          Email:    this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten.Email : this.Const.NONE,
+          Email:    this.Pool.Mitarbeiterdaten !== null ? this.Pool.Mitarbeiterdaten.Email   : this.Const.NONE,
           Vorname: this.Pool.Mitarbeiterdaten  !== null ? this.Pool.Mitarbeiterdaten.Vorname : this.Const.NONE,
-          Name:    this.Pool.Mitarbeiterdaten  !== null ? this.Pool.Mitarbeiterdaten.Name : this.Const.NONE
+          Name:    this.Pool.Mitarbeiterdaten  !== null ? this.Pool.Mitarbeiterdaten.Name    : this.Const.NONE
         },
         Zeitpunkt:   Zeit.format('HH:mm DD.MM.YYYY'),
         Zeitstempel: Zeit.valueOf(),

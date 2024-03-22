@@ -92,6 +92,16 @@ const _Mitarbeiterpossitionen = {
 
 };
 
+const _Filetypen = {
+
+  Projektlogo:           'Projektlogo',
+  Baustellenberichtbild: 'Baustellenberichtbild',
+  Protokollbild:         'Protokollbild',
+  Aufgabenbild:          'Aufgabenbild',
+  None:                  'none',
+  Any:                   'Any'
+};
+
 const _Nachrichtentypen = {
 
   Text: 'Text',
@@ -1056,6 +1066,7 @@ export class ConstProvider {
   public readonly Projektpunktprioritaetstypen      = _Projektpunktprioritaetstypen;
   public readonly Leistungsphasenvarianten          = _Leistungsphasenvarianten;
   public readonly Anlagengruppen                    = _Anlagengruppen;
+  public readonly Filetypen                    = _Filetypen;
 
   constructor() {
 

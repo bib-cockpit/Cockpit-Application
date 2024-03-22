@@ -319,6 +319,18 @@ a:active {
   object-fit: cover;
 }
 
+.logokeeperdiv {
+
+  width:  300px;
+  height: 300px;
+  padding: 2px;
+  border-radius: 4px;
+  border: 1px solid #444444;
+  display: flex;
+  justify-content: center; // horizontal
+  align-items: center; // vertikal
+}
+
 .importoutlookbutton {
 
   background: #7b6a58;

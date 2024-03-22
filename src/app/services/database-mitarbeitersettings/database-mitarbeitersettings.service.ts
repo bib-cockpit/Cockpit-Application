@@ -264,20 +264,5 @@ export class DatabaseMitarbeitersettingsService {
     }
   }
 
-  /*
-  public DeleteMitarbeitersetting(setting: Mitarbeitersettingsstruktur): Promise<any> {
 
-    try {
-
-      setting.Deleted = true;
-
-      return this.UpdateMitarbeitersettings(setting);
-
-    } catch (error) {
-
-      this.Debug.ShowErrorMessage(error.message, 'Database Mitarbeitersettings', 'DeleteMitarbeiter', this.Debug.Typen.Service);
-    }
-  }
-
-   */
 }

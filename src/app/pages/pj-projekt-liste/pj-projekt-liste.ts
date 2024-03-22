@@ -34,6 +34,7 @@ import {
 import {DatabaseProtokolleService} from "../../services/database-protokolle/database-protokolle.service";
 import {DatabaseProjektfirmenService} from "../../services/database-projektfirmen/database-projektfirmen.service";
 import { Projektfirmenstruktur } from 'src/app/dataclasses/projektfirmenstruktur';
+import {Teamsdownloadstruktur} from "../../dataclasses/teamsdownloadstruktur";
 
 
 @Component({
@@ -85,16 +86,19 @@ export class PjProjektListePage implements OnInit, OnDestroy {
   public FolderauswahlUrsprung: string;
   public AuswahlDialogBreite: number;
   public AuswahlDialogHoehe: number;
+  public LogoUrlListe: string[];
   public FolderauswahlVarianten = {
 
     Protokolle:        'Protokolle',
     Bautagebuch:       'Bautagebuch',
     BaustelleLOPListe: 'BaustelleLOPListe',
     Projekt:           'Projekt',
-    Rechnungen:        'Rechnungen'
+    Rechnungen:        'Rechnungen',
+    Bilder:            'Bilder'
   };
   public Multiselect: boolean;
   public ShowFirmeneditor: boolean;
+  private AllDataSubscription: Subscription;
 
   constructor(public  Basics: BasicsProvider,
               public  Debug: DebugProvider,
@@ -105,6 +109,7 @@ export class PjProjektListePage implements OnInit, OnDestroy {
               public  DBStandort: DatabaseStandorteService,
               private DBBeteiligte: DatabaseProjektbeteiligteService,
               public  Const: ConstProvider,
+              private GraphService: Graphservice,
               public Auswahlservice: AuswahlDialogService,
               public Displayservice: DisplayService,
 
@@ -123,7 +128,7 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       this.Dialoghoehe       = 400;
       this.Dialogbreite      = 600;
       this.DialogPosY        = 100;
-      this.StrukturDialogbreite = 1400;
+      this.StrukturDialogbreite = 1600;
       this.StrukturDialoghoehe  = 800;
       this.Filter            = '';
       this.Kontaktephabet    = this.Standardalphabet;
@@ -151,6 +156,8 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       this.ShowOutlookkontakteAuswahl = false;
       this.AuswahlDialogHoehe         = 300;
       this.AuswahlDialogBreite        = 300;
+      this.LogoUrlListe               = [];
+      this.AllDataSubscription = null;
     }
     catch (error) {
 
@@ -166,6 +173,10 @@ export class PjProjektListePage implements OnInit, OnDestroy {
 
       this.ListeSubscription = null;
 
+      this.AllDataSubscription.unsubscribe();
+
+      this.AllDataSubscription = null;
+
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Projekt Liste', 'OnDestroy', this.Debug.Typen.Page);
@@ -179,6 +190,11 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       this.Displayservice.ResetDialogliste();
 
       this.ListeSubscription = this.DB.GesamtprojektelisteChanged.subscribe(() => {
+
+        this.PrepareData();
+      });
+
+      this.AllDataSubscription = this.Pool.LoadingAllDataFinished.subscribe(() => {
 
         this.PrepareData();
       });
@@ -273,7 +289,7 @@ export class PjProjektListePage implements OnInit, OnDestroy {
     }
   }
 
-  private PrepareData() {
+  private async PrepareData() {
 
     try {
 
@@ -288,22 +304,10 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       let PosA: number;
       let Solltext: string;
       let Suchtext: string;
+      let LogoUrl: string;
 
       this.Lastletter = '';
 
-      /*
-
-      if(this.ShowRealProjekteOnly) Liste = lodash.filter(Liste, { ProjektIsReal : true});
-
-      if(this.ShowOwnProjekteOnly) {
-
-        Liste = lodash.filter(Liste, (Projekt: Projektestruktur) => {
-
-          return this.DB.CheckProjektmembership(Projekt);
-        });
-      }
-
-       */
 
       for(let Projekt of Liste) {
 
@@ -323,14 +327,6 @@ export class PjProjektListePage implements OnInit, OnDestroy {
 
         Merker = lodash.cloneDeep(Liste);
         Liste  = lodash.filter(Merker, { StandortID: this.DBStandort.CurrentStandortfilter._id }); // eintrag.StandortID === this.DBStandort.CurrentStandortfilter._id;
-        // });
-
-        /*
-        for(let Eintrag of Merker) {
-
-          if(Eintrag.StandortID === this.DBStandort.CurrentStandortfilter._id) Liste.push(Eintrag);
-        }
-        */
       }
 
       // Alphabetfilter anwenden
@@ -392,11 +388,55 @@ export class PjProjektListePage implements OnInit, OnDestroy {
 
       this.Liste = lodash.cloneDeep(Liste);
 
-      // this.ProjektButtonClicked(0);
+      // Projektlogos laden
+
+      this.LogoUrlListe = [];
+
+      for(let Projekt of Liste) {
+
+        LogoUrl = await this.DownloadLogo(Projekt);
+
+        this.LogoUrlListe.push(LogoUrl);
+      }
     }
     catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Projekt Liste', 'PrepareData', this.Debug.Typen.Page);
+    }
+  }
+
+  async DownloadLogo(projekt: Projektestruktur) {
+
+    try {
+
+      let Teamsfile: Teamsfilesstruktur;
+      let Download: Teamsdownloadstruktur;
+
+      if(projekt.ProjektlogofileID !== null) {
+
+
+        Teamsfile = lodash.find(this.Pool.Logofilesliste[projekt.Projektkey], { _id: projekt.ProjektlogofileID });
+
+        if(!lodash.isUndefined(Teamsfile)) {
+
+          try {
+
+            Download = await this.GraphService.DownloadTeamsfile(Teamsfile);
+
+            return Download.url;
+          }
+          catch(error) {
+
+            return null;
+          }
+        }
+        else return null;
+      }
+      else return null;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'function', this.Debug.Typen.Component);
     }
   }
 
@@ -1236,6 +1276,13 @@ export class PjProjektListePage implements OnInit, OnDestroy {
 
             this.DB.CurrentProjekt.RechnungListefolderID = dir.id;
 
+
+            break;
+
+          case this.FolderauswahlVarianten.Bilder:
+
+            this.DB.CurrentProjekt.BilderFolderID = dir.id;
+
             debugger;
 
             break;
@@ -1359,7 +1406,6 @@ export class PjProjektListePage implements OnInit, OnDestroy {
       this.Auswahltitel  = 'Firma festlegen';
       this.Auswahlliste  = [];
 
-
       for(let Eintrag of this.DB.CurrentProjekt.Firmenliste) {
 
         this.Auswahlliste.push({ Index: Index, FirstColumn: Eintrag.Firma, SecoundColumn: '', Data: Eintrag.FirmenID });
@@ -1385,6 +1431,20 @@ export class PjProjektListePage implements OnInit, OnDestroy {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'Projekt Liste', 'SelectRechnungfolderHandler', this.Debug.Typen.Page);
+    }
+  }
+
+  SelectBilderfolderHandler() {
+
+    try {
+
+      this.FolderauswahlUrsprung = this.FolderauswahlVarianten.Bilder;
+      this.Folderauswahltitel    = 'Verzeichnis für Bilder festlegen';
+      this.ShowFolderAuswahl     = true;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Liste', 'SelectBilderfolderHandler', this.Debug.Typen.Page);
     }
   }
 }

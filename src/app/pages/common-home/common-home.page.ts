@@ -342,6 +342,8 @@ export class CommonHomePage implements OnInit, OnDestroy {
 
           Aufgabenansicht = this.Pool.GetAufgabenansichten(this.DBProjekte.CurrentProjekt !== null ? this.DBProjekte.CurrentProjekt._id : null);
 
+
+
           await this.DBMitarbeitersettings.UpdateMitarbeitersettings(this.Pool.Mitarbeitersettings, Aufgabenansicht);
 
           this.Pool.ProjektdatenLoaded = true;

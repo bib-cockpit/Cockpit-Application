@@ -35,7 +35,9 @@ import {Notizenkapitelstruktur} from "../../dataclasses/notizenkapitelstruktur";
 import {Thumbnailstruktur} from "../../dataclasses/thumbnailstrucktur";
 import {BasicsProvider} from "../basics/basics";
 import {Outlookemailadressstruktur} from "../../dataclasses/outlookemailadressstruktur";
-import {EmitFlags} from "@angular/compiler-cli";
+import {reject} from "lodash-es";
+import {resolve} from "@angular/compiler-cli";
+import {Verfasserstruktur} from "../../dataclasses/verfasserstruktur";
 
 @Injectable({
   providedIn: 'root'
@@ -129,6 +131,96 @@ export class Graphservice {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'Graph', 'constructor', this.Debug.Typen.Service);
+    }
+  }
+
+  public async UploadNewfile(DirectoryID, Filename: string,  Content: Blob): Promise<any> {
+
+    try {
+
+      let Url: string = '/sites/' + this.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+      let token: any;
+      let graphClient: Client;
+      let Result: Teamsfilesstruktur;
+
+      token = await this.AuthService.RequestToken('user.read');
+
+      debugger;
+
+      if(token !== null) {
+
+        try {
+
+          graphClient = Client.init({
+            authProvider: (done: AuthProviderCallback) => {
+
+              done(null, token);
+            }
+          });
+
+          Result = await graphClient.api(Url).put(Content);
+
+          return Result;
+        }
+        catch (error) {
+
+          debugger;
+
+          return Promise.reject(error);
+        }
+      }
+      else {
+
+        return Promise.reject(false);
+      }
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Graph', 'Uploadfile', this.Debug.Typen.Service);
+    }
+  }
+
+  public async UploadChangedfile(fileid: string,  Content: Blob): Promise<any> {
+
+    try {
+
+      let Url: string = '/sites/' + this.BAESiteID + '/drive/items/' + fileid + '/content';
+      let token = await this.AuthService.RequestToken('user.read');
+      let graphClient: Client;
+      let Result: Teamsfilesstruktur;
+
+      token = await this.AuthService.RequestToken('user.read');
+
+      if(token !== null) {
+
+        try {
+
+          graphClient = Client.init({
+            authProvider: (done: AuthProviderCallback) => {
+
+              done(null, token);
+            }
+          });
+
+          Result = await graphClient.api(Url).put(Content);
+
+          debugger;
+
+          return Result;
+        }
+        catch (error) {
+
+          debugger;
+
+          return Promise.reject(error);
+        }
+      }
+      else {
+
+        return Promise.reject(false);
+      }
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Graph', 'UploadChengedfile', this.Debug.Typen.Service);
     }
   }
 
@@ -1322,9 +1414,13 @@ export class Graphservice {
 
    */
 
-  public GetEmptyTeamsfile() {
+  public GetEmptyTeamsfile(): Teamsfilesstruktur {
 
     try {
+
+      let Vorname: string = this.Pool.Mitarbeiterdaten   !== null ? this.Pool.Mitarbeiterdaten.Vorname : '';
+      let Name: string    = this.Pool.Mitarbeiterdaten   !== null ? this.Pool.Mitarbeiterdaten.Name    : '';
+      let Email: string   = this.Pool.Mitarbeiterdaten   !== null ? this.Pool.Mitarbeiterdaten.Email   : '';
 
       return  {
         cTag: "",
@@ -1357,7 +1453,23 @@ export class Graphservice {
           },
         shared: {scope: ""},
         size: 0,
-        webUrl: ""
+        webUrl: "",
+        _id: null,
+        ProjektID:      null,
+        Projektkey:     null,
+        ProjektpunktID: null,
+        Leistungsphase: null,
+        Zeitstempel:    null,
+        Zeitsting:      null,
+        Filetyp:        null,
+        MimeType:       this.Const.NONE,
+        DirectoryID:    this.Const.NONE,
+        Beschreibung:   null,
+        Verfasser: {
+          Vorname: Vorname,
+            Name:  Name,
+            Email: Email
+        }
       };
 
     } catch (error) {
@@ -1473,7 +1585,7 @@ export class Graphservice {
     }
   }
 
-  public async DownloadPDFTeamsFile(teamsid: string, file: Teamsfilesstruktur): Promise<Teamsdownloadstruktur> {
+  public async DownloadTeamsfile(file: Teamsfilesstruktur): Promise<Teamsdownloadstruktur> {
 
     try {
 
@@ -1496,13 +1608,12 @@ export class Graphservice {
 
         if(token !== null) {
 
-          graphClient.api('/groups/' +  teamsid + '/drive/items/' + file.id + '?select=id,@microsoft.graph.downloadUrl').get().then((result: any) => {
+          graphClient.api('/sites/' +  this.BAESiteID + '/drive/items/' + file.id + '?select=id,@microsoft.graph.downloadUrl').get().then((result: any) => {
 
             Download.id      = result.id;
             Download.url     = result['@microsoft.graph.downloadUrl'];
             Download.context = result['@odata.context'];
 
-            this.CurrentPDFDownload = Download;
 
             resolve(Download);
 
@@ -1521,7 +1632,7 @@ export class Graphservice {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'Graph', 'DownloadPDFTeamsFile', this.Debug.Typen.Service);
+      this.Debug.ShowErrorMessage(error, 'Graph', 'DownloadTeamsfile', this.Debug.Typen.Service);
     }
   }
 
@@ -1986,8 +2097,6 @@ export class Graphservice {
         if(token !== null) {
 
           graphClient.api('/sites/' + this.BAESiteID + '/drive/items/' + dirid).get().then((result: any) => {
-
-            debugger;
 
             resolve(result);
 

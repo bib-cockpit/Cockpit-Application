@@ -10,6 +10,7 @@ import {PageHeaderModule} from "../../components/page-header/page-header.module"
 import {PageFooterModule} from "../../components/page-footer/page-footer.module";
 import {PageHeaderCenterModule} from "../../components/page-header-center/page-header-center.module";
 import {ButtonValueModule} from "../../components/button-value/button-value.module";
+import {NgxFileDropModule} from "ngx-file-drop";
 
 @NgModule({
   declarations: [
@@ -20,19 +21,20 @@ import {ButtonValueModule} from "../../components/button-value/button-value.modu
 
     PjProjektEditorComponent
   ],
-    imports: [
+  imports: [
 
-        CommonModule,
-        IonicModule,
-        InputCloneModule,
-        InputCloneKeeperModule,
-        AbstandElementFixedModule,
-        CheckboxClonModule,
-        PageHeaderModule,
-        PageFooterModule,
-        PageHeaderCenterModule,
-        ButtonValueModule
-    ],
+    CommonModule,
+    IonicModule,
+    InputCloneModule,
+    InputCloneKeeperModule,
+    AbstandElementFixedModule,
+    CheckboxClonModule,
+    PageHeaderModule,
+    PageFooterModule,
+    PageHeaderCenterModule,
+    ButtonValueModule,
+    NgxFileDropModule,
+  ],
   providers: [
 
   ]

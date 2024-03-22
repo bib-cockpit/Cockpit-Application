@@ -1,6 +1,7 @@
 // import {LOPListefelderSettingsstruktur} from "./loplistefeldersettingsstruktur";
 
 import {Aufgabenansichtstruktur} from "./aufgabenansichtstruktur";
+import {Aufgabenpersonenfilterstruktur} from "./aufgabenpersonenfilterstruktur";
 
 export type Mitarbeitersettingsstruktur = {
 
@@ -47,6 +48,8 @@ export type Mitarbeitersettingsstruktur = {
   AufgabenShowMeintag:       boolean;
   AufgabenShowZeitansatz:    boolean;
   AufgabenShowMeinewoche:    boolean;
+
+  AufgabenPersonenfilter: Aufgabenpersonenfilterstruktur[];
 
   UrlaubShowBeantragt:         boolean;
   UrlaubShowVertreterfreigabe: boolean;

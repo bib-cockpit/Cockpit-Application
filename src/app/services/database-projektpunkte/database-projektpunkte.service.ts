@@ -37,6 +37,7 @@ import {Aufgabenansichtstruktur} from "../../dataclasses/aufgabenansichtstruktur
 import {DatabaseMitarbeitersettingsService} from "../database-mitarbeitersettings/database-mitarbeitersettings.service";
 import {forEach} from "lodash-es";
 import {JSX} from "ionicons";
+import {Aufgabenpersonenfilterstruktur} from "../../dataclasses/aufgabenpersonenfilterstruktur";
 
 @Injectable({
   providedIn: 'root'
@@ -1870,6 +1871,8 @@ export class DatabaseProjektpunkteService {
       let ResultA: boolean;
       let ResultB: boolean;
       let Ansichtensetup: Aufgabenansichtstruktur;
+      let Personenfilter: Aufgabenpersonenfilterstruktur = lodash.find(Settings.AufgabenPersonenfilter, {Projektkey: Projektpunkt.Projektkey});
+      let PersonenfilterOK: boolean;
 
       GoOn = true;
 
@@ -1890,6 +1893,30 @@ export class DatabaseProjektpunkteService {
       if(Projektpunkt.PlanungsmatrixID !== null) {
 
         GoOn = Ansichtensetup.AufgabenShowPlanungsmatrix;
+      }
+
+      // Personenfilter anwenden
+
+      if(Personenfilter.PersonenlisteID.length > 0) {
+
+        if(GoOn === true) {
+
+          if(Projektpunkt.ZustaendigeInternIDListe.length === 0) {
+
+            GoOn = false;
+          }
+          else {
+
+            PersonenfilterOK = false;
+
+            for(let MitarbeiterID of Projektpunkt.ZustaendigeInternIDListe) {
+
+              if(Personenfilter.PersonenlisteID.indexOf(MitarbeiterID) !== -1) PersonenfilterOK = true;
+            }
+
+            GoOn = PersonenfilterOK;
+          }
+        }
       }
 
       if(GoOn === true) {

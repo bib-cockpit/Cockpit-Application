@@ -35,6 +35,8 @@ import {Fachbereichestruktur} from "../../dataclasses/fachbereicheclass";
 import {Aufgabenansichtstruktur} from "../../dataclasses/aufgabenansichtstruktur";
 import {Festlegungskategoriestruktur} from "../../dataclasses/festlegungskategoriestruktur";
 import {DatabaseUrlaubService} from "../../services/database-urlaub/database-urlaub.service";
+import {Aufgabenpersonenfilterstruktur} from "../../dataclasses/aufgabenpersonenfilterstruktur";
+import {Mitarbeiterstruktur} from "../../dataclasses/mitarbeiterstruktur";
 
 @Component({
   selector: 'page-header-menu',
@@ -74,6 +76,7 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
   @Output()  ShowLOPListeInfoeintraegeChanged = new EventEmitter<any>();
   @Output()  ExpandFestlegungeEvent = new EventEmitter<boolean>();
   @Output()  UrlaubMitarbeiterClicked = new EventEmitter<boolean>();
+  @Output()  PersonenfilterButtonClicked = new EventEmitter<boolean>();
 
   private SuchleisteInputSubscription: Subscription;
   private Suchleiste2InputSubscription: Subscription;
@@ -1247,4 +1250,64 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
+  CountAufgabenPersonenfilterAnzahl(): number {
+
+    try {
+
+      let Anzahl: number = 0;
+
+      let Personenfilter: Aufgabenpersonenfilterstruktur;
+
+
+
+      if(this.DBProjekte.CurrentProjekt !== null) {
+
+        Personenfilter = lodash.find(this.Pool.Mitarbeitersettings.AufgabenPersonenfilter, {Projektkey: this.DBProjekte.CurrentProjekt.Projektkey});
+
+        Anzahl = Personenfilter.PersonenlisteID.length;
+      }
+
+      return Anzahl;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Page Header Menu', 'CountAufgabenPersonenfilterAnzahl', this.Debug.Typen.Component);
+    }
+  }
+
+  GetAufgabenPersonenfilterlistetext(): string {
+
+    try {
+
+      let Text : string = '';
+      let Personenfilter: Aufgabenpersonenfilterstruktur;
+      let Mitarbeiterliste: Mitarbeiterstruktur[];
+      let Index: number = 0;
+
+      if(this.DBProjekte.CurrentProjekt !== null) {
+
+        Personenfilter   = lodash.find(this.Pool.Mitarbeitersettings.AufgabenPersonenfilter, {Projektkey: this.DBProjekte.CurrentProjekt.Projektkey});
+        Mitarbeiterliste = lodash.filter(this.Pool.Mitarbeiterliste, (mitarbeiter: Mitarbeiterstruktur) => {
+
+          return Personenfilter.PersonenlisteID.indexOf(mitarbeiter._id) !== -1;
+        });
+      }
+
+      for(let Mitarbiter of Mitarbeiterliste) {
+
+        Text += Mitarbiter.Vorname + ' ' + Mitarbiter.Name;
+
+        if(Index < Mitarbeiterliste.length -1) Text += ', ';
+
+        Index++;
+      }
+
+      return Text;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Page Header Menu', 'GetAufgabenPersonenfilterlistetext', this.Debug.Typen.Component);
+    }
+
+  }
 }

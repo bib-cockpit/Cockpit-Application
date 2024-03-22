@@ -1,0 +1,108 @@
+
+<div [style.z-index]="ZIndex" style="position: absolute; top: 0px; left: 0px; background: none;  width: 100%; height: 100%">
+  <div  class="keeperdivclass" [style.background]="Displayservice.ShowOpacity(Displayservice.Dialognamen.Mitarbeiterauswahl) ? 'rgba(0, 0, 0, 0.5)' : 'none'" (click)="ContentClicked($event)">
+    <div class="contentdivclass"
+         [style.width.px]="Dialogbreite"
+         [style.bottom.px]="PositionY" [style.top.px]="PositionY"  (click)="ContentClicked($event)">
+      <ion-header>
+        <page-header>
+          <table class="paddingsmalltable">
+            <tr>
+              <td style="width: 4px"></td>
+              <td><ion-icon [name]="Iconname" color="weiss"></ion-icon></td>
+              <td [style.color]="'white'">{{Titel}}</td>
+            </tr>
+          </table>
+        </page-header>
+      </ion-header>
+
+      <ion-content>
+
+        <div class="innerkeeperclass">
+          <div class="innerkeeperlisteclass">
+
+            <ion-list *ngIf="Mitarbeiterliste && Anzeigeliste.length > 0">
+              <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Mitarbeiter of Anzeigeliste, let i = index" (click)="MitrabeiterButtonClicked(Mitarbeiter)">
+                <ion-grid class="maingridclass">
+                  <ion-row  *ngIf="Mitarbeiterbuchstabenliste[i] !== ''">
+                    <ion-col size="12">
+                      <ion-text color="orange"><b>{{Mitarbeiterbuchstabenliste[i]}}</b></ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="12">
+                      <div class="kontaktclass">
+                        <table class="paddingsmalltable" width="100%">
+                          <tr>
+                            <td>
+                              <table *ngIf="Mitarbeiter !== null" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td><checkbox-clon [Index]="i" (CheckChanged)="CheckedChanged($event)" [Checked]="Mitarbeiter.Selected"></checkbox-clon></td>
+                                  <td *ngIf="!Mitarbeiter.Filtered">
+                                    {{Mitarbeiter.Name}} {{Mitarbeiter.Vorname}} / {{Mitarbeiter.Kuerzel}}
+                                  </td>
+                                  <td *ngIf="Mitarbeiter.Filtered">
+                                    <span>{{Mitarbeiter.Text_A}}</span><span style="color: green">{{Mitarbeiter.Text_B}}</span><span>{{Mitarbeiter.Text_C}}</span> / {{Mitarbeiter.Kuerzel}}
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <table class="infotable" style="white-space:nowrap;">
+                                <tr>
+                                  <td style="width: 28px"></td>
+                                  <td class="ergonametextclass">Stadort:</td><td>{{DBStandort.GetStandort(Mitarbeiter.StandortID)}}</td><td style="width: 20px"></td>
+                                </tr>
+                              </table>
+                          </tr>
+                        </table>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+            </ion-list>
+
+            <div *ngIf="Mitarbeiterliste && Anzeigeliste.length === 0" class="emptymessageclass">
+              keine Einträge unter diesem Filter vorhanden
+            </div>
+
+          </div>
+          <div class="innerkeeperalphabetclass">
+            <alphabet-relative #SmallAlphabet (AlphabetClicked)="AlphabetClicked($event)"
+                      [Buchstabenliste]="Mitarbeiteralphabet"
+                      [Breite]="Alphapetbreite"
+                      [Auswahl]="Mitarbeiteralphabetauswahl"></alphabet-relative>
+          </div>
+        </div>
+
+      </ion-content>
+
+      <ion-footer>
+        <page-footer>
+          <table class="paddingsmalltable" width="100%">
+            <tr>
+              <td>
+                <div class="rootbuttonclass" (click)="CancelButtonClicked()">
+                  <ion-icon style="font-size: 28px" color="weiss" name="close-outline"></ion-icon>
+                </div>
+              <td style="width: 100%"></td>
+              <td>
+
+                <div class="rootbuttonclass" (click)="OkButtonClicked()">
+                  <ion-icon style="font-size: 28px" color="weiss" name="checkmark-outline"></ion-icon>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </page-footer>
+      </ion-footer>
+
+    </div>
+  </div>
+</div>
+
+
+

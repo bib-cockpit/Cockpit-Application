@@ -284,6 +284,8 @@ export class CommonEmaillistePage implements OnInit, OnDestroy{
       this.Emailliste = [];
       this.SortierteEmailliste = [];
 
+      debugger;
+
       for(let Mail of Emailliste) {
 
         if(this.DBEmail.ShowUngelesenOnly) {

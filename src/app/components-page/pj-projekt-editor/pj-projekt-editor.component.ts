@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {BasicsProvider} from "../../services/basics/basics";
 import {DebugProvider} from "../../services/debug/debug";
 import {ToolsProvider} from "../../services/tools/tools";
@@ -29,7 +39,12 @@ import {Outlookpresetcolorsstruktur} from "../../dataclasses/outlookpresetcolors
 import {Mitarbeiterstruktur} from "../../dataclasses/mitarbeiterstruktur";
 import {Projektfirmenstruktur} from "../../dataclasses/projektfirmenstruktur";
 import {DatabaseProjektfirmenService} from "../../services/database-projektfirmen/database-projektfirmen.service";
-import * as buffer from "buffer";
+import {NgxFileDropEntry} from "ngx-file-drop";
+import {FilePicker, PickedFile, PickFilesResult} from '@capawesome/capacitor-file-picker';
+import {DatabaseTeamsfilesService} from "../../services/database-teamsfiles/database-teamsfiles.service";
+import {addWarning} from "@angular-devkit/build-angular/src/utils/webpack-diagnostics";
+import {Teamsdownloadstruktur} from "../../dataclasses/teamsdownloadstruktur";
+
 
 @Component({
   selector: 'pj-projekt-editor',
@@ -37,6 +52,8 @@ import * as buffer from "buffer";
   styleUrls: ['./pj-projekt-editor.component.scss'],
 })
 export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild("uploader", { static: false }) uploader: ElementRef<HTMLInputElement>;
 
   @Output() StatusClickedEvent         = new EventEmitter<any>();
   @Output() StandortClickedEvent       = new EventEmitter<any>();
@@ -63,6 +80,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
   @Output() SelectProtokollfolderEvent         = new EventEmitter<any>();
   @Output() SelectProjektfolderEvent           = new EventEmitter<any>();
   @Output() SelectRechnungfolderEvent          = new EventEmitter<any>();
+  @Output() SelectBilderfolderEvent            = new EventEmitter<any>();
   @Output() LeistungsphaseClickedEvent         = new EventEmitter<any>();
   @Output() EditMitarbeiterEvent               = new EventEmitter<any>();
   @Output() FirmaClickedEvend                  = new EventEmitter<Projektfirmenstruktur>();
@@ -97,6 +115,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
   public Protokollfolder: string;
   public Projektfolder: string;
   public Bautagebuchfolder: string;
+  public Bilderfolder: string;
   public BaustelleLOPListefolder:string;
   public RechnungListefolder: string;
   public Listentrennerhoehe: number;
@@ -106,6 +125,10 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
   public BeteiligteFooterhoehe: number;
   public BeteiligteContenthoehe: number;
   public EditFirmenEnabled: boolean;
+  public Dateiliste: NgxFileDropEntry[];
+  public LogoUrl: string;
+
+
 
   constructor(public Basics: BasicsProvider,
               public Debug: DebugProvider,
@@ -119,6 +142,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
               public Pool: DatabasePoolService,
               private GraphService: Graphservice,
               public DBGebaeude: DatabaseGebaeudestrukturService,
+              public DBTeamsfiles: DatabaseTeamsfilesService,
               public Const: ConstProvider) {
     try {
 
@@ -132,7 +156,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.ZIndex              = 2000;
       this.Beteiligtenliste    = [];
       this.Firmenliste         = [];
-      this.Bereich             = this.Bereiche.Beteiligte;
+      this.Bereich             = this.Bereiche.Allgemein;
       this.ShowRaumVerschieber = false;
       this.PositionChanged     = false;
       this.Mitarbeiterliste    = [];
@@ -140,8 +164,11 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       this.PathesSubscription  = null;
       this.Protokollfolder     = '/';
       this.Bautagebuchfolder   = '/';
+      this.Bilderfolder        = '/';
       this.Projektfolder       = '/';
       this.EditFirmenEnabled   = false;
+      this.Dateiliste = [];
+      this.LogoUrl = '';
 
       this.BaustelleLOPListefolder = '/';
       this.RechnungListefolder     = '/';
@@ -208,6 +235,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
 
       this.DBGebaeude.Init();
 
+      this.LogoUrl                = '';
       this.BeteiligteHeaderhoehe  = 40;
       this.BeteiligteFooterhoehe  = 60;
       this.BeteiligteContenthoehe = this.Basics.Contenthoehe - 2 * this.PositionY - 90 - this.BeteiligteHeaderhoehe - this.BeteiligteFooterhoehe;
@@ -253,6 +281,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       let FileinfoC: Teamsfilesstruktur = null;
       let FileinfoD: Teamsfilesstruktur = null;
       let FileinfoE: Teamsfilesstruktur = null;
+      let FileinfoF: Teamsfilesstruktur = null;
       let Root: string;
 
       if(this.DB.CurrentProjekt.ProjektFolderID !== this.Const.NONE) {
@@ -358,6 +387,27 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
         this.RechnungListefolder = 'nicht festgelegt';
       }
 
+      if(this.DB.CurrentProjekt.BilderFolderID !== this.Const.NONE) {
+
+        FileinfoF = await this.GraphService.GetSiteSubDirectory(this.DB.CurrentProjekt.BilderFolderID);
+
+        if(FileinfoF !== null) {
+
+          Root      = FileinfoF.parentReference.path;
+          Root      = Root.replace('/drive/root:/', '');
+
+          this.Bilderfolder = 'Projekte/' + Root + '/' + FileinfoF.name;
+        }
+        else {
+
+          this.Bilderfolder = 'Verzeichnis ist nicht vorhanden';
+        }
+      }
+      else {
+
+        this.Bilderfolder = 'nicht festgelegt';
+      }
+
       this.ValidateInput();
 
     } catch (error) {
@@ -374,6 +424,7 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
       let Mitarbeiter: Mitarbeiterstruktur;
 
       await this.CheckSitesPathes();
+      await this.DownloadLogo();
 
       this.Listentrennerhoehe = this.Dialoghoehe;
 
@@ -1135,6 +1186,195 @@ export class PjProjektEditorComponent implements OnInit, OnDestroy, AfterViewIni
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'EditFirmenCheckChanged', this.Debug.Typen.Component);
+    }
+  }
+
+
+
+  OnFileDroppedHandler(dateiliste: NgxFileDropEntry[]) {
+
+    try {
+
+      this.Dateiliste = dateiliste;
+
+      for (const droppedFile of this.Dateiliste) {
+
+        // Is it a file?
+        if (droppedFile.fileEntry.isFile) {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file((file: File) => {
+
+            // Here you can access the real file
+            console.log(droppedFile.relativePath, file);
+
+            /**
+             // You could upload it like this:
+             const formData = new FormData()
+             formData.append('logo', file, relativePath)
+
+             // Headers
+             const headers = new HttpHeaders({
+             'security-token': 'mytoken'
+             })
+
+             this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
+             .subscribe(data => {
+             // Sanitized logo returned from backend
+             })
+             **/
+
+          });
+        } else {
+          // It was a directory (empty directories are added, otherwise only files)
+          const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+          console.log(droppedFile.relativePath, fileEntry);
+        }
+      }
+
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'OnFileDroppedHandler', this.Debug.Typen.Component);
+    }
+  }
+
+  FileOverHandler(event: any) {
+
+    try {
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'FileOverHandler', this.Debug.Typen.Component);
+    }
+  }
+
+  FileLeaveHandler(event: any) {
+
+    try {
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'FileLeaveHandler', this.Debug.Typen.Component);
+    }
+  }
+
+  async popFileChooser(): Promise<any> {
+
+    try {
+
+      let Dateidaten: PickedFile;
+      let Content: string;
+      let Dateiname: string;
+      let Beschreibung: string = 'Projektlogo';
+      let Blobdaten: Blob;
+      let Teamsimagefile: Teamsfilesstruktur;
+      let PysicalfileID: string;
+      let DatabasefileID: string;
+
+      const result: PickFilesResult = await FilePicker.pickFiles({
+        types: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'],
+        multiple: false,
+        readData: true
+      });
+
+      Dateidaten = result.files[0];
+      Content    = Dateidaten.data;
+      Dateiname  = Dateidaten.name;
+      Blobdaten  = this.Tools.dataURItoBlob(Content);
+
+      if(this.DB.CurrentProjekt.ProjektlogofileID !== null) {
+
+        Teamsimagefile = lodash.find(this.Pool.Teamsfilesliste[this.DB.CurrentProjekt.Projektkey], {_id: this.DB.CurrentProjekt.ProjektlogofileID});
+        PysicalfileID  = Teamsimagefile.id;
+        DatabasefileID = Teamsimagefile._id;
+      }
+      else {
+
+        PysicalfileID  = null;
+        DatabasefileID = null;
+      }
+
+      try {
+
+        Teamsimagefile = await this.DBTeamsfiles.SaveTeamslogoimagefile(this.DB.CurrentProjekt.BilderFolderID, Dateiname, Beschreibung, Blobdaten, this.Const.Filetypen.Projektlogo, PysicalfileID, DatabasefileID);
+
+        this.DB.CurrentProjekt.ProjektlogofileID = Teamsimagefile._id;
+
+        await this.DB.UpdateProjekt(this.DB.CurrentProjekt);
+        await this.DownloadLogo();
+
+
+      } catch (error) {
+
+        this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'popFileChooser', this.Debug.Typen.Component);
+
+        debugger;
+      }
+
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'popFileChooser', this.Debug.Typen.Component);
+    }
+  }
+
+  async DownloadLogo() {
+
+    try {
+
+      let Teamsfile: Teamsfilesstruktur = lodash.find(this.Pool.Logofilesliste[this.DB.CurrentProjekt.Projektkey], {_id: this.DB.CurrentProjekt.ProjektlogofileID});
+      let Download: Teamsdownloadstruktur;
+
+      if(!lodash.isUndefined(Teamsfile)) {
+
+        try {
+          Download     = await this.GraphService.DownloadTeamsfile(Teamsfile);
+          this.LogoUrl = Download.url;
+        }
+        catch(error) {
+
+          this.LogoUrl = null;
+        }
+      }
+      else this.LogoUrl = null;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'function', this.Debug.Typen.Component);
+    }
+  }
+
+  ImageLoadedHandler(event: Event) {
+
+    try {
+
+      let Width: any = event.target;
+
+
+
+      debugger;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'file', 'function', this.Debug.Typen.Page);
+    }
+  }
+
+  async DeleteLogo() {
+
+    try {
+
+
+      await this.DBTeamsfiles.DeleteTeamsimagefile(this.DB.CurrentProjekt.ProjektlogofileID);
+
+      this.DB.CurrentProjekt.ProjektlogofileID = null;
+
+      await this.DB.UpdateProjekt(this.DB.CurrentProjekt);
+
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'DeleteLogo', this.Debug.Typen.Component);
     }
   }
 }

@@ -27,6 +27,7 @@ import {Aufgabenansichtstruktur} from "../../dataclasses/aufgabenansichtstruktur
 import {Festlegungskategoriestruktur} from "../../dataclasses/festlegungskategoriestruktur";
 import {Urlaubsstruktur} from "../../dataclasses/urlaubsstruktur";
 import {Simontabellestruktur} from "../../dataclasses/simontabellestruktur";
+import {Teamsfilesstruktur} from "../../dataclasses/teamsfilesstruktur";
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,8 @@ export class DatabasePoolService {
   public ProjektdatenLoaded: boolean;
   public Emailcontentvarinaten: any;
   public Simontabellenliste: Simontabellestruktur[][];
+  public Teamsfilesliste: Teamsfilesstruktur[][];
+  public Logofilesliste: Teamsfilesstruktur[][];
 
   public StandortelisteChanged: EventEmitter<any> = new EventEmitter<any>();
   public MitarbeiterlisteChanged: EventEmitter<any> = new EventEmitter<any>();
@@ -95,7 +98,6 @@ export class DatabasePoolService {
 
   constructor(private Debug: DebugProvider,
               private Const: ConstProvider,
-              private AuthService: DatabaseAuthenticationService,
               private Http:  HttpClient) {
     try {
 
@@ -129,6 +131,7 @@ export class DatabasePoolService {
       this.Notizenkapitelliste      = [];
       this.Outlookkatekorien        = [];
       this.Simontabellenliste       = [];
+      this.Teamsfilesliste          = [];
       this.CockpitserverURL         = environment.production === true ? 'https://bae-cockpit-server.azurewebsites.net' : 'http://localhost:8080';
       this.CockpitdockerURL         = environment.production === true ? 'https://bae-cockpit-docker.azurewebsites.net' : 'http://localhost:80';
       this.Emailcontent             = this.Emailcontentvarinaten.NONE;
@@ -136,7 +139,8 @@ export class DatabasePoolService {
       this.Fachbereich              = new Fachbereiche();
       this.CurrentAufgabenansichten = null;
       this.Festlegungskategorienliste = [];
-      this.DeletedProjektpunkteliste = [];
+      this.DeletedProjektpunkteliste  = [];
+      this.Logofilesliste             = [];
       this.ProjektdatenLoaded         = false;
 
       this.Signatur                 =
@@ -296,6 +300,61 @@ export class DatabasePoolService {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'Database Pool', 'GetAufgabenansichten', this.Debug.Typen.Service);
+    }
+  }
+
+  public ReadTeamsfilesliste(projekt: Projektestruktur, filetype: string): Promise<any> {
+
+    try {
+
+      let Params: HttpParams;
+      let Headers: HttpHeaders;
+      let TeamsfilelisteObservable: Observable<any>;
+
+      this.Teamsfilesliste[projekt.Projektkey] = [];
+
+      return new Promise((resolve, reject) => {
+
+        Params  = new HttpParams({ fromObject: { projektkey: projekt.Projektkey, filetype: filetype }} );
+        Headers = new HttpHeaders({
+
+          'content-type': 'application/json',
+        });
+
+        TeamsfilelisteObservable = this.Http.get(this.CockpitserverURL + '/files', { headers: Headers, params: Params } );
+
+        TeamsfilelisteObservable.subscribe({
+
+          next: (data) => {
+
+            this.Teamsfilesliste[projekt.Projektkey] = <Teamsfilesstruktur[]>data;
+
+          },
+          complete: () => {
+
+            this.Debug.ShowMessage('Read Teamsfileliste von ' + projekt.Projektkurzname + ' fertig.', 'Database Pool', 'ReadTeamsfilesliste', this.Debug.Typen.Service);
+
+            this.Teamsfilesliste[projekt.Projektkey].forEach((Teamsfile: Teamsfilesstruktur) => {
+
+              if(lodash.isUndefined(Teamsfile.Beschreibung)) Teamsfile.Beschreibung             = '';
+              if(lodash.isUndefined(Teamsfile.Filetyp))      Teamsfile.Filetyp                  = this.Const.Filetypen.None;
+            });
+
+
+            resolve(true);
+          },
+          error: (error: HttpErrorResponse) => {
+
+            debugger;
+
+            reject(error);
+          }
+        });
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Database Pool', 'ReadTeamsfilesliste', this.Debug.Typen.Service);
     }
   }
 
@@ -1220,7 +1279,7 @@ export class DatabasePoolService {
 
     try {
 
-      let Steps: number           = 10;
+      let Steps: number           = 12;
       this.ShowProgress           = true;
       this.MaxProgressValue       = projektliste.length * Steps;
       this.CurrentProgressValue   = 0;
@@ -1234,6 +1293,19 @@ export class DatabasePoolService {
         this.ProgressMessage = 'Projektpunkte Musterprojekt';
 
         for(let Projekt of projektliste)  {
+
+          this.ProgressMessage = 'Init Aufgaben Personenfilter ' + Projekt.Projektkurzname;
+
+          if(lodash.isUndefined(lodash.find(this.Mitarbeitersettings.AufgabenPersonenfilter, {Projektkey: Projekt.Projektkey}))) {
+
+            this.Mitarbeitersettings.AufgabenPersonenfilter.push({
+
+              Projektkey: Projekt.Projektkey,
+              PersonenlisteID: []
+            });
+          }
+
+          this.CurrentProgressValue++;
 
           this.ProgressMessage = 'Projektpunkte ' + Projekt.Projektkurzname;
 
@@ -1284,6 +1356,12 @@ export class DatabasePoolService {
           this.ProgressMessage = 'Simontabellen Liste ' + Projekt.Projektkurzname;
 
           await this.ReadSimontabellen(Projekt);
+
+          this.CurrentProgressValue++;
+
+          this.ProgressMessage = 'Teamsfilesliste ' + Projekt.Projektkurzname;
+
+          await this.ReadTeamsfilesliste(Projekt, this.Const.Filetypen.Any);
 
           this.CurrentProgressValue++;
         }
@@ -1378,7 +1456,9 @@ export class DatabasePoolService {
         AufgabenTerminfilterStartwert: null,
         AufgabenTerminfilterEndewert:  null,
 
-        LOPListeGeschlossenZeitfilter: 14
+        LOPListeGeschlossenZeitfilter: 14,
+
+        AufgabenPersonenfilter: []
       };
 
     } catch (error) {
@@ -1452,6 +1532,8 @@ export class DatabasePoolService {
           if(lodash.isUndefined(Settings.UrlaubShowFeiertage_DE))         Settings.UrlaubShowFeiertage_DE         = true;
           if(lodash.isUndefined(Settings.UrlaubShowFeiertage_BG))         Settings.UrlaubShowFeiertage_BG         = true;
           if(lodash.isUndefined(Settings.UrlaubShowMeinenUrlaub))         Settings.UrlaubShowMeinenUrlaub         = true;
+
+          if(lodash.isUndefined(Settings.AufgabenPersonenfilter))         Settings.AufgabenPersonenfilter         = [];
 
           this.CurrentAufgabenansichten = this.GetAufgabenansichten(null);
 

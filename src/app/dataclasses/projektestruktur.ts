@@ -34,7 +34,10 @@ export type Projektestruktur = {
   TeamsID:              string;
   TeamsDescription:     string;
   TeamsName:            string;
+  ProjektlogofileID:     string;
+  Projektlogobreite:     string;
   ProjektFolderID:       string;
+  BilderFolderID:        string;
   ProtokolleFolderID:    string;
   BautagebuchFolderID:   string;
   BaustellenLOPFolderID: string;

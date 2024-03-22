@@ -178,7 +178,7 @@ export class PjTeamsFilebrowserComponent implements OnInit, OnChanges {
 
         this.PDFDownloadStarted.emit(file);
 
-        await this.GraphService.DownloadPDFTeamsFile(this.TeamsID, file);
+        await this.GraphService.DownloadTeamsfile(file);
 
         this.PDFDownloadFinished.emit(file);
       }
