@@ -1,0 +1,159 @@
+
+<ion-header class="ion-no-border">
+  <page-header #PageHeader>
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 50%; height: 50px">
+
+
+          <table>
+            <tr>
+              <td style="width: 10px"></td>
+              <td>
+                <div class="menubuttonclass" [style.cursor]="BackMouseOver ? 'pointer': 'default'"
+                     (mouseenter)="BackMouseOver = true"
+                     (mouseleave)="BackMouseOver = false"
+                     (click)="BackButtonClicked()">
+                  <table class="paddingsmalltable">
+                    <tr>
+                      <td>
+                        <ion-icon name="arrow-back-circle-outline"
+                                  [color]="BackMouseOver ? Basics.Ionicfarben.BAEBlau : Basics.Ionicfarben.Weiss">
+                        </ion-icon>
+                      </td>
+                      <td [style.color]="BackMouseOver ? 'black' : 'white'">Zurück</td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td style="width: 10px"></td>
+              <td align="center" class="trennertdclass"><div class="trennerdivclass"></div></td>
+              <td style="width: 10px"></td>
+              <td *ngIf="DBProjekte.CurrentProjekt !== null">
+
+                <ion-text color="weiss">
+                  <b>
+                    {{this.DBProjekte.CurrentProjekt.Projektname}}
+                  </b>
+                </ion-text>
+
+              </td>
+              <td style="width: 10px"></td>
+
+
+            </tr>
+          </table>
+
+        </td>
+        <td align="right" valign="middle" style="width: 50px;">
+          <table *ngIf="GraphService.UserimageSRC !== null">
+            <tr>
+              <td>
+                <img class="userimagesmall" [src]="GraphService.UserimageSRC">
+              </td>
+              <td style="width: 10px"></td>
+            </tr>
+          </table>
+          <div *ngIf="GraphService.UserimageSRC === null" class="userkuerzelsmall">
+            {{Pool.Mitarbeiterdaten !==  null ? Pool.Mitarbeiterdaten.Kuerzel : '---'}}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </page-header>
+</ion-header>
+<ion-content>
+
+  <div class="KeeperDiv" *ngIf="DBProjekte.CurrentProjekt !== null">
+    <div class="ListHeaderDiv" [style.height.px]="ListeHeaderhoehe">
+      <table>
+        <tr>
+          <td>
+            <div class="folderdivclass" (click)="HistoryFolderClicked($event, null)">
+              <table class="paddingtable">
+                <tr>
+                  <td><ion-icon name="folder" style="font-size: 28px;" [color]="Basics.Ionicfarben.BurnicklBraun"></ion-icon></td><td>{{DBProjekte.CurrentProjekt.Projektname}}</td>
+                </tr>
+              </table>
+            </div>
+          </td>
+          <td *ngFor="let HistoryFolder of DB.FolderHistory">
+            <div class="folderdivclass" (click)="HistoryFolderClicked($event, HistoryFolder)">
+              <table class="paddingtable">
+                <tr>
+                  <td><ion-icon name="folder" style="font-size: 28px;" [color]="Basics.Ionicfarben.BurnicklBraun"></ion-icon></td><td>{{HistoryFolder.Zeitstring}}</td><td>{{HistoryFolder.Name}}</td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="ListContentDiv" [style.height.px]="ListeContenthoehe" [style.top.px]="ListeHeaderhoehe">
+
+      <ion-list>
+        <ion-item class="ion-text-wrap" class="ion-no-padding" *ngFor="let Folder of DB.CurrentFolderliste">
+          <table style="width: 100%">
+            <tr>
+              <td style="width: 90%">
+                <div class="folderdivclass" (click)="FolderClicked($event, Folder)">
+                  <table class="paddingtable">
+                    <tr>
+                      <td><ion-icon name="folder" style="font-size: 28px;" [color]="Basics.Ionicfarben.BurnicklBraun"></ion-icon></td>
+                      <td>{{Folder.Zeitstring}}</td>
+                      <td>{{Folder.Name}}</td>
+                      <!--
+                      <td>{{Folder.Subdirectorysnzahl}}</td>
+                      -->
+                    </tr>
+                  </table>
+                </div>
+              </td>
+              <td align="right">
+                <table class="paddingtable">
+                  <tr>
+                    <td>
+                      <div class="iconkeeperdivclass" (click)="EditFolderClicked($event, Folder)">
+                        <ion-icon name="create" [color]="Basics.Ionicfarben.BurnicklBraun" style="font-size: 28px;"></ion-icon>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </ion-item>
+      </ion-list>
+
+    </div>
+  </div>
+
+
+</ion-content>
+<ion-footer>
+  <page-footer #PageFooter>
+
+    <div class="rootbuttonclass" (click)="AddFolderButtonClicked()">
+      <ion-icon style="font-size: 28px" color="weiss" name="add-circle-outline"></ion-icon>
+    </div>
+
+  </page-footer>
+</ion-footer>
+
+<pj-folder-editor *ngIf="ShowFoldereditor === true"
+                  (CancelClickedEvent)="ShowFoldereditor = false"
+                  (OkClickedEvent)="ShowFoldereditor = false">
+</pj-folder-editor>
+
+<!--
+
+<auswahl-dialog *ngIf="ShowAuswahl" [Auswahlliste]="Auswahlliste" [Auswahlindex]="Auswahlindex" [ZIndex]="5000"
+                [Dialogbreite]="400"  [PositionY]="100"
+                [Titel]="Auswahltitel" [Iconname]="''"
+                (OkClickedEvent)="AuswahlOkButtonClicked($event)"
+                (CancelClickedEvent)="ShowAuswahl = false">
+</auswahl-dialog>
+
+
+-->
+

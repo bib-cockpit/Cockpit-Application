@@ -1,0 +1,32 @@
+.infotable {
+
+  td {
+
+    font-size: 90%;
+    color: #444444;
+  }
+}
+
+.keeperdivclass {
+
+  width: 100%;
+  height: 100%;
+  position:absolute;
+}
+
+.contentdivclass {
+
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%);
+}
+
+.contentinnerclass {
+
+  border-left:  3px solid #307ac1;
+  border-right: 3px solid #307ac1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}

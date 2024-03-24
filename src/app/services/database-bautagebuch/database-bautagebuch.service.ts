@@ -71,9 +71,6 @@ export class DatabaseBautagebuchService {
       let Liste: string[] = [];
       let Firma: Projektfirmenstruktur;
 
-
-      debugger;
-
       for(let id of this.CurrentTagebuch.BeteiligtExternIDListe) {
 
         Beteiligte = lodash.find(this.DBProjekt.CurrentProjekt.Beteiligtenliste, {BeteiligtenID: id});
@@ -126,8 +123,6 @@ export class DatabaseBautagebuchService {
 
       // Teilnehmer bestimmen
 
-      debugger;
-
       this.CurrentTagebuch.ExterneTeilnehmerliste = this.GetExterneTeilnehmerliste(true, true);
       this.CurrentTagebuch.InterneTeilnehmerliste = this.GetInterneTeilnehmerliste(true, true);
 
@@ -137,8 +132,6 @@ export class DatabaseBautagebuchService {
       CcEmpfaengerliste = [];
 
       // Externe Teilnehmer der Firmen hinzufügen
-
-      debugger;  // EmpfaengerExternIDListe
 
       for(let ExternEmpfaengerID of this.CurrentTagebuch.EmpfaengerExternIDListe) {
 
@@ -202,8 +195,6 @@ export class DatabaseBautagebuchService {
 
       this.CurrentTagebuch.Empfaengerliste   = Empfaengerliste;
       this.CurrentTagebuch.CcEmpfaengerliste = CcEmpfaengerliste;
-
-      debugger;
 
     } catch (error) {
 
@@ -294,8 +285,6 @@ export class DatabaseBautagebuchService {
         GesendetZeitstring: this.Const.NONE,
       };
 
-      debugger;
-
       if(this.ProjektDB.CurrentProjekt !== null &&
         !lodash.isUndefined(this.Pool.Bautagebuchliste[this.ProjektDB.CurrentProjekt.Projektkey]) &&
         !lodash.isUndefined(this.Pool.Bautagebuchliste[this.ProjektDB.CurrentProjekt.Projektkey][0]))
@@ -376,8 +365,6 @@ export class DatabaseBautagebuchService {
         Observer.subscribe({
 
           next: (result) => {
-
-            debugger;
 
             Bautagebuch = result.data;
 
@@ -472,12 +459,8 @@ export class DatabaseBautagebuchService {
 
           next: (ne) => {
 
-            debugger;
-
           },
           complete: () => {
-
-            debugger;
 
             this.UpdateBautagebuchliste(this.CurrentTagebuch);
 
@@ -512,15 +495,12 @@ export class DatabaseBautagebuchService {
 
           // PUT für update
 
-        debugger;
-
         Observer = this.http.put(this.ServerUrl, this.CurrentTagebuch);
 
         Observer.subscribe({
 
           next: (ne) => {
 
-            debugger;
 
           },
           complete: () => {
@@ -684,16 +664,18 @@ export class DatabaseBautagebuchService {
 
       let Observer: Observable<any>;
       let Teamsfile: Teamsfilesstruktur;
-      let Beteiligter: Projektbeteiligtestruktur;
-      let Mitarbeiter: Mitarbeiterstruktur;
+      let Logoteamsfile: Teamsfilesstruktur;
       let Liste: string[] = [];
-      let Name: string;
 
 
       for(let InternID of bautagebuch.BeteiligtInternIDListe) {
 
         Liste.push(this.GetBeteiligtInternName(InternID));
       }
+
+      Logoteamsfile = lodash.find(this.Pool.Logofilesliste[projekt.Projektkey], {_id: projekt.ProjektlogofileID});
+
+      if(lodash.isUndefined(Logoteamsfile)) Logoteamsfile = null;
 
 
       let Daten: {
@@ -706,6 +688,7 @@ export class DatabaseBautagebuchService {
         Mitarbeiter: Mitarbeiterstruktur;
         ShowMailinformations: boolean;
         BeteiligtInternListe: string[];
+        Logoteamsfile: Teamsfilesstruktur;
       } = {
 
         DirectoryID: this.DBProjekt.CurrentProjekt.BautagebuchFolderID,
@@ -716,6 +699,7 @@ export class DatabaseBautagebuchService {
         Mitarbeiter: mitarbeiter,
         ShowMailinformations: showmailinformations,
         BeteiligtInternListe: Liste,
+        Logoteamsfile: Logoteamsfile
       };
 
       // Teilnehmer bestimmen
@@ -738,8 +722,6 @@ export class DatabaseBautagebuchService {
             Teamsfile = ne;
           },
           complete: () => {
-
-            debugger;
 
             Daten.Bautagebuch.FileID              = Teamsfile.id;
             Daten.Bautagebuch.GesendetZeitstempel = Teamsfile.GesendetZeitstempel;

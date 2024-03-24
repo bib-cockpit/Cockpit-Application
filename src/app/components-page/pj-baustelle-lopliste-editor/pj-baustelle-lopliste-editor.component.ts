@@ -37,6 +37,9 @@ import {Projektestruktur} from "../../dataclasses/projektestruktur";
 import {Fachbereiche} from "../../dataclasses/fachbereicheclass";
 import {DatabaseMitarbeiterService} from "../../services/database-mitarbeiter/database-mitarbeiter.service";
 import {Projektpunktanmerkungstruktur} from "../../dataclasses/projektpunktanmerkungstruktur";
+import {Teamsfilesstruktur} from "../../dataclasses/teamsfilesstruktur";
+import {Teamsdownloadstruktur} from "../../dataclasses/teamsdownloadstruktur";
+import {Graphservice} from "../../services/graph/graph";
 
 @Component({
   selector:    'pj-baustelle-lopliste-editor',
@@ -93,8 +96,7 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
   private ComponentLoaded: boolean;
   public  Beteiligtenliste: Projektbeteiligtestruktur[][];
   public Mitarbeiterliste: Mitarbeiterstruktur[];
-  // private MitarbeiterSubscription: Subscription;
-  // private BeteiligteSubscription: Subscription;
+  public LogoUrl: string;
 
   @Input() Titel: string;
   @Input() Iconname: string;
@@ -112,7 +114,7 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
               public DBGebaeude: DatabaseGebaeudestrukturService,
               public Displayservice: DisplayService,
               public DBMitarbeiter: DatabaseMitarbeiterService,
-              private LoadingAnimation: LoadingAnimationService,
+              private GraphService: Graphservice,
               public Pool: DatabasePoolService) {
     try {
 
@@ -132,8 +134,6 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
       this.ShowUpload               = false;
       this.LOPListeSubscription     = null;
       this.ProjektpunktSubscription = null;
-      // this.MitarbeiterSubscription  = null;
-      // this.BeteiligteSubscription   = null;
       this.Beteiligtenliste         = [];
       this.Titel = this.Const.NONE;
       this.Iconname = 'help-circle-outline';
@@ -141,12 +141,40 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
       this.PositionY = 100;
       this.ZIndex = 2000;
       this.Mitarbeiterliste = [];
+      this.LogoUrl = '';
     }
     catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, 'LOP Liste Editor', 'constructor', this.Debug.Typen.Component);
     }
   }
+
+  async DownloadLogo() {
+
+    try {
+
+      let Teamsfile: Teamsfilesstruktur = lodash.find(this.Pool.Logofilesliste[this.DBProjekte.CurrentProjekt.Projektkey], {_id: this.DBProjekte.CurrentProjekt.ProjektlogofileID});
+      let Download: Teamsdownloadstruktur;
+
+      if(!lodash.isUndefined(Teamsfile)) {
+
+        try {
+          Download     = await this.GraphService.DownloadTeamsfile(Teamsfile);
+          this.LogoUrl = Download.url;
+        }
+        catch(error) {
+
+          this.LogoUrl = null;
+        }
+      }
+      else this.LogoUrl = null;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Projekt Editor', 'function', this.Debug.Typen.Component);
+    }
+  }
+
 
   ngOnInit(): void {
 
@@ -290,7 +318,7 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
     }
   }
 
-  private PrepareData() {
+  private async PrepareData() {
 
     try {
 
@@ -298,6 +326,8 @@ export class PjBaustelleLoplisteEditorComponent implements OnDestroy, OnInit, Af
       let Index: number = 0;
       let Liste: Projektbeteiligtestruktur[];
       let Mitarbeiter: Mitarbeiterstruktur;
+
+      await this.DownloadLogo();
 
       this.Beteiligtenliste = [];
       this.Mitarbeiterliste = [];

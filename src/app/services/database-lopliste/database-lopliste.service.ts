@@ -21,6 +21,7 @@ import {LOPListestruktur} from "../../dataclasses/loplistestruktur";
 import {Projektfirmenstruktur} from "../../dataclasses/projektfirmenstruktur";
 import {DatabaseFestlegungenService} from "../database-festlegungen/database-festlegungen.service";
 import {Festlegungskategoriestruktur} from "../../dataclasses/festlegungskategoriestruktur";
+import {Teamsdownloadstruktur} from "../../dataclasses/teamsdownloadstruktur";
 
 @Injectable({
   providedIn: 'root'
@@ -222,11 +223,16 @@ export class DatabaseLoplisteService {
 
       let Observer: Observable<any>;
       let Teamsfile: Teamsfilesstruktur;
+      let Logoteamsfile: Teamsfilesstruktur;
       let Punkteliste: Projektpunktestruktur[] = lopliste.Projektpunkteliste;
       let Projektpunkt: Projektpunktestruktur;
       let Punkteindex: number;
       let ExternZustaendigListe: string[][] = [];
       let InternZustaendigListe: string[][] = [];
+
+      Logoteamsfile = lodash.find(this.Pool.Logofilesliste[projekt.Projektkey], {_id: projekt.ProjektlogofileID});
+
+      if(lodash.isUndefined(Logoteamsfile)) Logoteamsfile = null;
 
       let Daten: {
 
@@ -236,6 +242,7 @@ export class DatabaseLoplisteService {
         LOPListe:    LOPListestruktur;
         Standort:    Standortestruktur;
         Mitarbeiter: Mitarbeiterstruktur;
+        Logoteamsfile: Teamsfilesstruktur;
         ShowMailinformations: boolean;
       } = {
 
@@ -245,6 +252,7 @@ export class DatabaseLoplisteService {
         Filename:    filename,
         Standort:    standort,
         Mitarbeiter: mitarbeiter,
+        Logoteamsfile: Logoteamsfile,
         ShowMailinformations: showmailinformations
       };
 

@@ -10,6 +10,7 @@ import {PjPlanungsmatrixPage} from "../../pages/pj-planungsmatrix/pj-planungsmat
 import {CommonUrlaubFreigabenPage} from "../../pages/common-urlaub-freigaben/common-urlaub-freigaben.page";
 import {PjSchnellaufgabenListePage} from "../../pages/pj-schnellaufgaben-liste/pj-schnellaufgaben-liste.page";
 import {CommonUserauswahlPage} from "../../pages/common-userauswahl/common-userauswahl.page";
+import {PjFileslistePage} from "../../pages/pj-filesliste/pj-filesliste";
 
 const _MitarbeiterdatenKeys = {
 
@@ -251,6 +252,8 @@ const _Pages = {
   PjProtokolleListePage: 'PjProtokolleListePage',
 
   PjFilebrowserPage: 'PjFilebrowserPage',
+
+  PjFileslistePage: 'PjFileslistePage',
 
   PjBaustelleLoplistePage: 'PjBaustelleLoplistePage',
   PjBaustelleTagebuchlistePage: 'PjBaustelleTagebuchlistePage',

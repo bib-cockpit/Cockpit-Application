@@ -472,7 +472,6 @@ export class PjEmailSendComponent implements OnInit, OnDestroy, AfterViewInit {
           Filename          = this.DBSimontabelle.CurrentRechnung.Filename;
           Simontabellen     = lodash.filter(this.Pool.Simontabellenliste[this.DBProjekte.CurrentProjekt.Projektkey], {Leistungsphase: this.DBSimontabelle.CurrentSimontabelle.Leistungsphase});
 
-
           try {
 
             NextSimontabellen = await this.DBSimontabelle.SaveSimontabelleInSites(Filename, Projekt, Simontabellen, Standort, Mitarbeiter,false);
@@ -491,6 +490,15 @@ export class PjEmailSendComponent implements OnInit, OnDestroy, AfterViewInit {
           for(let Tabelle of NextSimontabellen) {
 
             if(Tabelle._id === this.DBSimontabelle.CurrentSimontabelle._id) this.DBSimontabelle.CurrentSimontabelle = Tabelle;
+
+            for(let Rechnung of Tabelle.Rechnungen) {
+
+              if(Rechnung.RechnungID === this.DBSimontabelle.CurrentRechnung.RechnungID) {
+
+                debugger;
+              }
+            }
+
 
             await this.DBSimontabelle.UpdateSimontabelle(Tabelle);
           }

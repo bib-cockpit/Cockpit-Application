@@ -1,0 +1,98 @@
+.userimagesmall {
+
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-top: 4px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userkuerzelsmall {
+
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-right: 4px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center; // horizontal
+  align-items: center; // vertikal
+  background: #454545;
+  color: white;
+  font-weight: bold;
+}
+
+.trennerdivclass {
+
+  width: 1px;
+  min-height: 30px;
+  height: 100%;
+  background: silver;
+}
+
+.filekeeperclass {
+
+  width: 500px;
+  height: 100%;
+  left: 0px;
+  background: none;
+  display: flex;
+  justify-content: flex-end; // horizontal
+  align-items: center; // vertikal
+  color: white;
+  font-weight: bold;
+  padding: 6px;
+}
+
+.folderdivclass {
+
+  width: 100%;
+  height: 100%;
+  min-height: 34px;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: center; // vertikal
+  border-radius: 3px;
+  color: black;
+}
+
+.folderdivclass:hover {
+
+  background: silver;
+}
+
+.iconkeeperdivclass {
+
+  display: flex;
+  justify-content: center; // horizontal
+  align-items: center; // vertikal
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.KeeperDiv {
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ListHeaderDiv {
+
+  position: absolute;
+  border-bottom: 2px solid #444444;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; // horizontal
+  align-items: center; // vertikal
+}
+
+.ListContentDiv {
+
+  position: absolute;
+  width: 100%;
+  overflow: auto;
+}

@@ -555,6 +555,11 @@ export class DatabaseProtokolleService {
       let Kostengruppe: Kostengruppenstruktur;
       let Text: string;
       let Mitarbeiter: Mitarbeiterstruktur;
+      let Logoteamsfile: Teamsfilesstruktur;
+
+      Logoteamsfile = lodash.find(this.Pool.Logofilesliste[projekt.Projektkey], {_id: projekt.ProjektlogofileID});
+
+      if(lodash.isUndefined(Logoteamsfile)) Logoteamsfile = null;
 
       let Daten: {
 
@@ -564,6 +569,7 @@ export class DatabaseProtokolleService {
         Protokoll:   Protokollstruktur;
         Standort:    Standortestruktur;
         Mitarbeiter: Mitarbeiterstruktur;
+        Logoteamsfile: Teamsfilesstruktur;
         ShowMailinformations: boolean;
       } = {
 
@@ -573,7 +579,8 @@ export class DatabaseProtokolleService {
         Filename:    filename,
         Standort:    standort,
         Mitarbeiter: mitarbeiter,
-        ShowMailinformations: showmailinformations
+        ShowMailinformations: showmailinformations,
+        Logoteamsfile: Logoteamsfile
       };
 
       // Protokollpunkte eintragen

@@ -841,6 +841,11 @@ export class DatabaseSimontabelleService {
 
       let Observer: Observable<any>;
       let Teamsfile: Teamsfilesstruktur;
+      let Logoteamsfile: Teamsfilesstruktur;
+
+      Logoteamsfile = lodash.find(this.Pool.Logofilesliste[projekt.Projektkey], {_id: projekt.ProjektlogofileID});
+
+      if(lodash.isUndefined(Logoteamsfile)) Logoteamsfile = null;
 
       let Daten: {
 
@@ -853,6 +858,7 @@ export class DatabaseSimontabelleService {
         Mitarbeiter: Mitarbeiterstruktur;
         Standort:    Standortestruktur;
         ShowMailinformations: boolean;
+        Logoteamsfile: Teamsfilesstruktur;
       } = {
 
         DirectoryID:    this.DBProjekte.CurrentProjekt.RechnungListefolderID,
@@ -863,7 +869,8 @@ export class DatabaseSimontabelleService {
         LastRechnung:    this.LastRechnung,
         Mitarbeiter:     mitarbeiter,
         Standort:        standort,
-        ShowMailinformations: showmailinformations
+        ShowMailinformations: showmailinformations,
+        Logoteamsfile: Logoteamsfile
       };
 
       // Simontabelle auf Server speichern

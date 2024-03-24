@@ -48,13 +48,9 @@ export class DatabaseTeamsfilesService {
 
       if(databasefileid === null) {
 
-        debugger;
-
         return this.AddTeamsLogoimagefile(directoryid, filename, beschreibung, content, bildertyp);
       }
       else {
-
-        debugger;
 
         return this.UpdateTeamslogoimagefile(pysicalfileid, databasefileid, content, false);
       }
@@ -130,8 +126,6 @@ export class DatabaseTeamsfilesService {
 
         this.Pool.Logofilesliste[Projekt.Projektkey] = [];
       }
-
-      debugger;
 
       return new Promise((resolve, reject) => {
 
@@ -343,13 +337,9 @@ export class DatabaseTeamsfilesService {
       let Teamsfile: Teamsfilesstruktur = lodash.find(this.Pool.Teamsfilesliste[this.DBProjekte.CurrentProjekt.Projektkey], {_id: databasefileid});
       delete Teamsfile.__v;
 
-      debugger;
-
       return new Promise<any>((resove, reject) => {
 
         this.GraphService.UploadChangedfile(pysicalfileid, content).then((updatedteamsfile: Teamsfilesstruktur) => {
-
-          debugger;
 
           return new Promise<any>((resove, reject) => {
 
@@ -360,8 +350,6 @@ export class DatabaseTeamsfilesService {
             Observer.subscribe({
 
               next: (ne) => {
-
-                debugger;
 
               },
               complete: () => {

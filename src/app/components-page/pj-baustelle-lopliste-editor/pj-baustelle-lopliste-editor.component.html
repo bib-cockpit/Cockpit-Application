@@ -104,6 +104,13 @@
                             <input-clone [(Value)]="DB.CurrentLOPListe.Notizen"  [Titel]="'Notizen'" [Lines]="6" (TextChanged)="TextChangedHandler()"></input-clone>
                           </ion-col>
                         </ion-row>
+                        <ion-row  *ngIf="LogoUrl !== null">
+                          <ion-col>
+                            <div class="logokeeperdiv">
+                              <img  *ngIf="LogoUrl !== null" [src]="LogoUrl" [style.width.px]="DBProjekte.CurrentProjekt.Projektlogobreite">
+                            </div>
+                          </ion-col>
+                        </ion-row>
                       </ion-grid>
 
                   </td>

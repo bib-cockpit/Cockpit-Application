@@ -66,6 +66,7 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
   @Output()  FilterChanged = new EventEmitter<string>();
   @Output()  ShowProjektauswahlEvent = new EventEmitter<any>();
   @Output()  ShowProjektfilesEvent = new EventEmitter<any>();
+  @Output()  ShowProjektfilelistEvent = new EventEmitter<any>();
   @Output()  LOPListeZeitspanneEvent = new EventEmitter<any>();
   @Output()  ShowOpenFestlegungOnlyEvent = new EventEmitter<any>();
   @Output()  SendFestlegungenClicked = new EventEmitter<any>();
@@ -89,7 +90,8 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
   public Tagbreite: number;
   public HomeMouseOver: boolean;
   public EmailMouseOver: boolean;
-  public FilesMouseOver: boolean;
+  public FilebrowserMouseOver: boolean;
+  public FilelistMouseOver: boolean;
   public ShowOpenFestlegungOnly: boolean;
   public BackMouseOver: boolean;
   public Timelinebreite: number;
@@ -133,7 +135,8 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
       this.ShowMitarbeitertitle         = false;
       this.ShowProjektetitle            = false;
       this.ShowFavoritentitle           = false;
-      this.FilesMouseOver               = false;
+      this.FilebrowserMouseOver               = false;
+      this.FilelistMouseOver               = false;
       this.ShowOpenFestlegungOnly       = false;
       this.SendFestlegungenEnabled      = false;
       this.BackMouseOver                = false;
@@ -871,7 +874,7 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  ProjektfilesClicked() {
+  ProjektfilebrowserClicked() {
 
     try {
 
@@ -881,7 +884,21 @@ export class PageHeaderMenuComponent implements OnInit, OnDestroy, AfterViewInit
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'Page Header Menu', 'ProjektfilesClicked', this.Debug.Typen.Component);
+      this.Debug.ShowErrorMessage(error, 'Page Header Menu', 'ProjektfilebrowserClicked', this.Debug.Typen.Component);
+    }
+  }
+
+  ProjektfillisteClicked() {
+
+    try {
+
+
+
+      this.ShowProjektfilelistEvent.emit();
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'Page Header Menu', 'ProjektfillisteClicked', this.Debug.Typen.Component);
     }
   }
 

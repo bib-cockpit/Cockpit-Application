@@ -632,7 +632,7 @@ export class PjBaustelleLoplistePage implements OnInit, OnDestroy {
     try {
 
       this.Menuservice.FilelisteAufrufer    = this.Menuservice.FilelisteAufrufervarianten.LOPListe;
-      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Fileliste;
+      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Filebrowser;
 
       this.Menuservice.SetCurrentPage();
 

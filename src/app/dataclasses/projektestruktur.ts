@@ -2,6 +2,7 @@ import {Projektbeteiligtestruktur} from "./projektbeteiligtestruktur";
 import {Verfasserstruktur} from "./verfasserstruktur";
 import {Bauteilstruktur} from "./bauteilstruktur";
 import {Projektfirmenstruktur} from "./projektfirmenstruktur";
+import {Folderstruktur} from "./folderstruktur";
 
 export type Projektestruktur = {
 
@@ -54,7 +55,9 @@ export type Projektestruktur = {
   DisplayKG460: boolean;
   DisplayKG480: boolean;
   DisplayBeschreibungen: boolean;
-  DisplayUngenutzte: boolean;
+  DisplayUngenutzte:     boolean;
+
+  Folderliste: Folderstruktur[];
 
   Selected?: boolean;
   Filtered?: boolean;

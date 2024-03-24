@@ -25,6 +25,7 @@ import {Projektbeteiligtestruktur} from "../../dataclasses/projektbeteiligtestru
 import {Outlookpresetcolorsstruktur} from "../../dataclasses/outlookpresetcolorsstruktur";
 import {Outlookkategoriesstruktur} from "../../dataclasses/outlookkategoriesstruktur";
 import {Projektfirmenstruktur} from "../../dataclasses/projektfirmenstruktur";
+import {Folderstruktur} from "../../dataclasses/folderstruktur";
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,6 @@ export class DatabaseProjekteService {
   public Gesamtprojektliste:      Projektestruktur[];
   public BeteiligteFirmenfilter: string;
 
-
   constructor(private Debug: DebugProvider,
               private Basics: BasicsProvider,
               private Pool: DatabasePoolService,
@@ -79,8 +79,10 @@ export class DatabaseProjekteService {
       this.FavoritenCellbreite        = 100;
       this.Projektfarbenliste         = [];
       this.GesamtprojektlisteHasDatenerror = false;
-      this.SchnellaufgabeProjekt = null;
+
+      this.SchnellaufgabeProjekt  = null;
       this.BeteiligteFirmenfilter = 'Alle';
+
 
       this.Projektfarbenliste.push({Name: 'Grau',          Background: '#444444', Foreground: 'white'});
       this.Projektfarbenliste.push({Name: 'Hellblau',      Background: '#2554C7', Foreground: ''});
@@ -103,6 +105,8 @@ export class DatabaseProjekteService {
       this.Debug.ShowErrorMessage(error.message, 'Database Projekte', 'cosntructor', this.Debug.Typen.Service);
     }
   }
+
+
 
   public GetProjektByID(id: string): Projektestruktur {
 
@@ -227,6 +231,7 @@ export class DatabaseProjekteService {
         DisplayKG480: true,
         DisplayBeschreibungen: true,
         DisplayUngenutzte: true,
+        Folderliste: [],
       };
 
     } catch (error) {
@@ -327,6 +332,7 @@ export class DatabaseProjekteService {
               if(lodash.isUndefined(Projekt.BilderFolderID))        Projekt.BilderFolderID        = this.Const.NONE;
               if(lodash.isUndefined(Projekt.ProjektlogofileID))     Projekt.ProjektlogofileID     = null;
               if(lodash.isUndefined(Projekt.Projektlogobreite))     Projekt.Projektlogobreite     = "250";
+              if(lodash.isUndefined(Projekt.Folderliste))           Projekt.Folderliste           = [];
 
               if(Projekt.BautagebuchFolderID    === '') Projekt.BautagebuchFolderID   = this.Const.NONE;
               if(Projekt.ProtokolleFolderID     === '') Projekt.ProtokolleFolderID    = this.Const.NONE;
@@ -677,6 +683,8 @@ export class DatabaseProjekteService {
         DisplayKG480: true,
         DisplayBeschreibungen: true,
         DisplayUngenutzte: true,
+
+        Folderliste: []
       };
 
     } catch (error) {

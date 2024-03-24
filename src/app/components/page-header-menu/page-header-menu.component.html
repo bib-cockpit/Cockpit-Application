@@ -175,7 +175,7 @@
             {{Menuservice.MainMenuebereich}}
             -->
 
-            <ng-container *ngIf="Menuservice.MainMenuebereich === Menuservice.MainMenuebereiche.Projekte && Menuservice.ProjekteMenuebereich !== Menuservice.ProjekteMenuebereiche.Fileliste">
+            <ng-container *ngIf="Menuservice.MainMenuebereich === Menuservice.MainMenuebereiche.Projekte && Menuservice.ProjekteMenuebereich !== Menuservice.ProjekteMenuebereiche.Filebrowser">
               <td>
                 <table>
                   <tr>
@@ -355,15 +355,36 @@
                         </div>
                       </td>
                       <td *ngIf="Menuservice.MainMenuebereich !== Menuservice.MainMenuebereiche.Email">
-                        <div (click)="ProjektfilesClicked()" (mouseover)="FilesMouseOver = true" (mouseleave)="FilesMouseOver = false" [style.border-color]="FilesMouseOver === true ? '#c7d304' : 'white'"  class="buttonsmallclass">
-                          <table>
-                            <tr>
-                              <td>
-                                <ion-icon name="folder-outline" style="font-size: 18px" [color]="FilesMouseOver === true ? Basics.Ionicfarben.BAEBlau : Basics.Ionicfarben.Weiss"></ion-icon>
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
+                        <table>
+                          <tr>
+                            <td>
+
+                              <div (click)="ProjektfilebrowserClicked()" (mouseover)="FilebrowserMouseOver = true" (mouseleave)="FilebrowserMouseOver = false" [style.border-color]="FilebrowserMouseOver === true ? 'black' : 'white'"  class="buttonsmallclass">
+                                <table>
+                                  <tr>
+                                    <td>
+                                      <ion-icon name="folder-outline" style="font-size: 18px" [color]="FilebrowserMouseOver === true ? Basics.Ionicfarben.Schwarz : Basics.Ionicfarben.Weiss"></ion-icon>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </div>
+
+                            </td>
+                            <td>
+
+                              <div (click)="ProjektfillisteClicked()" (mouseover)="FilelistMouseOver = true" (mouseleave)="FilelistMouseOver = false" [style.border-color]="FilelistMouseOver === true ? 'black' : 'white'"  class="buttonsmallclass">
+                                <table>
+                                  <tr>
+                                    <td>
+                                      <ion-icon name="briefcase-outline" style="font-size: 18px" [color]="FilelistMouseOver === true ? Basics.Ionicfarben.Schwarz : Basics.Ionicfarben.Weiss"></ion-icon>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </div>
+
+                            </td>
+                          </tr>
+                        </table>
                       </td>
                       <td>
                         <ion-button (click)="ProjektGoForwardClicked()" slot="icon-only"

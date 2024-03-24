@@ -41,9 +41,11 @@ export class MenueService {
     Bautagebuch:   'Bautagebuch',
     Festlegungen:  'Festlegungen',
     Planungsmatrix: 'Planungsmatrix',
-    Simontabelle: 'Simontabelle',
-    Fileliste:     'Fileliste',
+    Simontabelle:   'Simontabelle',
+    Filebrowser:     'Filebrowser',
+    Fileliste:       'Fileliste',
     Notizen:       'Notizen'
+
   };
 
   public Aufgabenlisteansicht: string;
@@ -203,18 +205,19 @@ export class MenueService {
 
                   break;
 
-                case this.Aufgabenlisteansichten.Projekt:
-
-                  this.Tools.SetRootPage(this.Const.Pages.PjAufgabenlistePage);
-
-                  break;
               }
+
+              break;
+
+            case this.ProjekteMenuebereiche.Filebrowser:
+
+              this.Tools.PushPage(this.Const.Pages.PjFilebrowserPage);
 
               break;
 
             case this.ProjekteMenuebereiche.Fileliste:
 
-              this.Tools.PushPage(this.Const.Pages.PjFilebrowserPage);
+              this.Tools.PushPage(this.Const.Pages.PjFileslistePage);
 
               break;
 

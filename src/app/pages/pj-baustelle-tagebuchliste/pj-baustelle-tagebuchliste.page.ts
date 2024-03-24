@@ -137,7 +137,7 @@ export class PjBaustelleTagebuchlistePage implements OnInit, OnDestroy {
     try {
 
       this.Menuservice.FilelisteAufrufer    = this.Menuservice.FilelisteAufrufervarianten.Bautagebuch;
-      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Fileliste;
+      this.Menuservice.ProjekteMenuebereich = this.Menuservice.ProjekteMenuebereiche.Filebrowser;
 
       this.Menuservice.SetCurrentPage();
 
@@ -505,6 +505,8 @@ export class PjBaustelleTagebuchlistePage implements OnInit, OnDestroy {
 
 
       this.ShowProjektschnellauswahl = false;
+
+      this.PrepareData();
 
     } catch (error) {
 
